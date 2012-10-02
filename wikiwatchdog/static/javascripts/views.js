@@ -23,9 +23,9 @@ var SearchView = Backbone.View.extend({
   template: _.template($('#search-template').html()),
   el: "#content",
 
-  render: function (page, data) {
+  render: function (toSearch, data) {
     var json_data = $.parseJSON(data);
-    json_data.page = page;
+    json_data.toSearch = toSearch;
 
     $(this.el).html(this.template(json_data));
 

@@ -20,6 +20,7 @@
 
       <footer class="center">
         <p>&copy; fox</p>
+        <p>Powered by <a href="http://toolserver.org">Wikimedia Toolserver</a></p>
       </footer>
     </div>
 
@@ -77,7 +78,7 @@
         <div class="span4">
           <div class="row-fluid">
             <div class="span10">
-              <input id="search-text" type="text" class="nomargin width90" value="<%= page %>" />
+              <input id="search-text" type="text" class="nomargin width90" value="<%= toSearch %>" />
             </div>
             <div class="span2">
               <input id="search-button" type="button" type="submit" class="btn nomargin" value="Search">
@@ -88,12 +89,13 @@
 
       <hr>
 
-      <p>
-        These are the results of your query
-      </p>
-
       <div class="row-fluid">
-        <div class="span5">
+        <div class="span4">
+
+          <h5>
+            Articles edited anonymously by <%= toSearch %> on the English Wikipedia
+          </h5>
+
           <ul class="page-list nav nav-tabs nav-stacked">
             <% for (title in pages) { %>
               <li>
@@ -101,9 +103,14 @@
                    data-page = "<%= title %>"
                    href="http://en.wikipedia.org/wiki/<%= title %>"
                    target="_blank">
-                  <%= title %>
+
+                  <%= window.prettyTitle(title) %>
+                  <p class="small">
+                    (<%= pages[title].length %>
+                     edit<% if (pages[title].length > 1) { %>s<% } %>)
+                  </p>
                 </a>
-                <ul class="edit-list hide">
+                <ul class="edit-list well well-white hide">
                   <% for (var i=0; i<pages[title].length; i++) { %>
                     <li>
                       <a class="edit-item"
@@ -111,14 +118,16 @@
                          data-timestamp="<%= pages[title][i].timestamp %>"
                          data-ip="<%= pages[title][i].ip %>"
                          data-domain="<%= pages[title][i].domain %>"
+                         data-comment="<%= pages[title][i].comment %>"
                          href="#">
-                        <%= pages[title][i].timestamp %>
+                        <%= window.prettyTimestamp(pages[title][i].timestamp) %>
                       </a>
-                      by
-                      <%= pages[title][i].ip %>
-                      <% if (pages[title][i].domain) { %>
-                        (<%= pages[title][i].domain %>)
-                      <% } %>
+                      <p class="small">
+                        <%= pages[title][i].ip %>
+                        <% if (pages[title][i].domain) { %>
+                          (<%= pages[title][i].domain %>)
+                        <% } %>
+                      </p>
                     </li>
                   <% } %>
                 </ul>
@@ -127,7 +136,7 @@
           </ul>
         </div>
 
-        <div class="span7" id="diff-area">
+        <div class="span8" id="diff-area">
         </div>
       </div>
     </script>
@@ -138,7 +147,7 @@
     </script>
 
     <script type="text/template" id="diff-template">
-      <h4><%= page %></h4>
+      <h4><%= prettyTitle(page) %></h4>
 
       <p>See it on Wikipedia Wikitrip Manypedia</p>
 
@@ -149,7 +158,10 @@
       <% } else if (diff === "") { %>
         <p>Please, select an edit from the list to view the diff</p>
       <% } else { %>
-        <p><%= edit.timestamp %> - <%= edit.ip %> (<%= edit.domain %>)</p>
+        <p><%= prettyTimestamp(edit.timestamp) %> - <%= edit.ip %> (<%= edit.domain %>)</p>
+        <% if (edit.comment) { %>
+          <p>Edit comment: <em><%= edit.comment %></em></p>
+        <% } %>
       <% } %>
 
       <table class="diff diff-contentalign-left">

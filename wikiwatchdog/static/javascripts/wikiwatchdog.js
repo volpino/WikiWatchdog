@@ -22,6 +22,7 @@ $(function () {
       , ip = $(this).data("ip")
       , domain = $(this).data("domain")
       , timestamp = $(this).data("timestamp")
+      , comment = $(this).data("comment")
       , opts = {
         action: "query",
         prop: "revisions",
@@ -41,7 +42,7 @@ $(function () {
 
         diffData.diff = revData.diff["*"];
         diffData.page = page;
-        diffData.edit = {ip: ip, domain: domain, timestamp: timestamp}
+        diffData.edit = {ip: ip, domain: domain, timestamp: timestamp, comment: comment}
         window.diffView.render(diffData);
       }
     })
@@ -50,3 +51,19 @@ $(function () {
     e.stopPropagation();
   })
 });
+
+
+window.prettyTimestamp = function (ts) {
+  var ts = ts + ""
+    , year = ts.slice(0, 4)
+    , month = ts.slice(4, 6)
+    , day = ts.slice(6, 8)
+    , hour = ts.slice(8, 10)
+    , minutes = ts.slice(10, 12)
+    , seconds = ts.slice(12, 14);
+  return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+};
+
+window.prettyTitle = function (title) {
+  return title.replace(/_/g, " ");
+}

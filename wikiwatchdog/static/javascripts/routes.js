@@ -1,16 +1,15 @@
 var AppRouter = Backbone.Router.extend({
     routes: {
-      "search/:page": "search",
-      "search/": "search",
+      "search/:toSearch": "search",
       "help": "help",
       "*action": "home",
     },
     home: function () {
       window.homeView.render();
     },
-    search: function (page) {
+    search: function (toSearch) {
       $.get("test.json", function (data) {
-        window.searchView.render(page, data);
+        window.searchView.render(toSearch, data);
       });
     },
     help: function () {
