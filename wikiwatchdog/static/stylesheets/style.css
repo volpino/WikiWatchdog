@@ -1,0 +1,57 @@
+@font-face {
+    font-family: "Libertine";
+    src: url('LinLibertine_R.woff');
+}
+
+.libertine {
+    font-family: "Libertine" !important;
+}
+
+.nomargin {
+    margin: 0 !important;
+}
+
+.width100 {
+    width: 100% !important;
+}
+
+.width90 {
+    width: 90% !important;
+}
+
+.margin-top40 {
+    margin-top: 40px;
+}
+
+.margin-top60 {
+    margin-top: 60px;
+}
+
+.center {
+    text-align: center;
+}
+
+.well.well-white {
+    background-color: #fbfbfb !important;
+    border-color: #cccccc !important;
+}
+
+.no-style {
+    color: black !important;
+}
+
+.no-style:hover {
+    text-decoration: none;
+}
+
+.page-list {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.edit-list {
+    list-style: none;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

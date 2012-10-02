@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf8">
+    <title>Wiki WatchDog</title>
+    <link href="static/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="static/stylesheets/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="static/stylesheets/diff.css" rel="stylesheet">
+    <link href="static/stylesheets/style.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+
+      <div id="content">
+      </div>
+
+      <hr>
+
+      <footer class="center">
+        <p>&copy; fox</p>
+      </footer>
+    </div>
+
+
+    <script type="text/template" id="home-template">
+      <div class="row-fluid margin-top60">
+        <div class="span2">
+        </div>
+        <div class="span8">
+          <div class="well well-white">
+            <h1 class="libertine center">Wiki WatchDog</h1>
+            <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+            <form id="search-form" class="center margin-top40">
+              <div class="row-fluid">
+                <div class="span1">
+                </div>
+                <div class="span8">
+                  <input id="search-text" type="text" class="nomargin width100" />
+                </div>
+                <div class="span2">
+                  <input id="search-button" type="submit" class="btn nomargin" value="Search">
+                </div>
+                <div class="span1">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row-fluid">
+        <div class="span4">
+          <h4 class="libertine">What's Wiki WatchDog?</h4>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta. Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero. Vivamus ullamcorper sapien molestie magna convallis sit amet facilisis magna vulputate. Cras et pulvinar sem. Integer posuere interdum eros ut pharetra. Pellentesque eu ante pulvinar leo volutpat dictum
+        </div>
+
+        <div class="span4">
+          <h4 class="libertine">Authors</h4>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta. Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero. Vivamus ullamcorper sapien molestie magna convallis sit amet facilisis magna vulputate. Cras et pulvinar sem. Integer posuere interdum eros ut pharetra. Pellentesque eu ante pulvinar leo volutpat dictum.
+        </div>
+
+        <div class="span4">
+          <h4 class="libertine">Free and Open source API</h4>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta. Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero. Vivamus ullamcorper sapien molestie magna convallis sit amet facilisis magna vulputate. Cras et pulvinar sem. Integer posuere interdum eros ut pharetra. Pellentesque eu ante pulvinar leo volutpat dictum.
+        </div>
+      </div>
+    </script>
+
+    <script type="text/template" id="search-template">
+      <h2 class="libertine"><a class="no-style" href=".">Wiki Watchdog</a></h2>
+
+      <div class="row-fluid">
+        <div class="span4">
+          <div class="row-fluid">
+            <div class="span10">
+              <input id="search-text" type="text" class="nomargin width90" value="<%= page %>" />
+            </div>
+            <div class="span2">
+              <input id="search-button" type="button" type="submit" class="btn nomargin" value="Search">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <p>
+        These are the results of your query
+      </p>
+
+      <div class="row-fluid">
+        <div class="span5">
+          <ul class="page-list nav nav-tabs nav-stacked">
+            <% for (title in pages) { %>
+              <li>
+                <a class="page-title"
+                   data-page = "<%= title %>"
+                   href="http://en.wikipedia.org/wiki/<%= title %>"
+                   target="_blank">
+                  <%= title %>
+                </a>
+                <ul class="edit-list hide">
+                  <% for (var i=0; i<pages[title].length; i++) { %>
+                    <li>
+                      <a class="edit-item"
+                         data-revid="<%= pages[title][i].id %>"
+                         data-timestamp="<%= pages[title][i].timestamp %>"
+                         data-ip="<%= pages[title][i].ip %>"
+                         data-domain="<%= pages[title][i].domain %>"
+                         href="#">
+                        <%= pages[title][i].timestamp %>
+                      </a>
+                      by
+                      <%= pages[title][i].ip %>
+                      <% if (pages[title][i].domain) { %>
+                        (<%= pages[title][i].domain %>)
+                      <% } %>
+                    </li>
+                  <% } %>
+                </ul>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+
+        <div class="span7" id="diff-area">
+        </div>
+      </div>
+    </script>
+
+
+    <script type="text/template" id="diff-clear-template">
+      <h4>Select a page from the list</h4>
+    </script>
+
+    <script type="text/template" id="diff-template">
+      <h4><%= page %></h4>
+
+      <p>See it on Wikipedia Wikitrip Manypedia</p>
+
+      <hr>
+
+      <% if (error) { %>
+        <p>There was an error</p>
+      <% } else if (diff === "") { %>
+        <p>Please, select an edit from the list to view the diff</p>
+      <% } else { %>
+        <p><%= edit.timestamp %> - <%= edit.ip %> (<%= edit.domain %>)</p>
+      <% } %>
+
+      <table class="diff diff-contentalign-left">
+        <colgroup><col class="diff-marker">
+          <col class="diff-content">
+          <col class="diff-marker">
+          <col class="diff-content">
+        </colgroup><tbody>
+        <tbody id="diff-area">
+          <%= diff %>
+        </tbody>
+      </table>
+    </script>
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="static/javascripts/bootstrap.min.js"></script>
+
+    <script src="static/javascripts/underscore-min.js"></script>
+    <script src="static/javascripts/backbone-min.js"></script>
+
+    <script src="static/javascripts/views.js"></script>
+    <script src="static/javascripts/routes.js"></script>
+    <script src="static/javascripts/wikiwatchdog.js"></script>
+  </body>
+</html>

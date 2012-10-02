@@ -1,0 +1,71 @@
+table.diff, td.diff-otitle, td.diff-ntitle {
+    background-color: white;
+}
+td.diff-otitle, td.diff-ntitle {
+    text-align: center;
+}
+td.diff-marker {
+    font-size: 1.25em;
+    font-weight: bold;
+    text-align: right;
+}
+td.diff-lineno {
+    font-weight: bold;
+}
+td.diff-addedline, td.diff-deletedline, td.diff-context {
+    font-size: 88%;
+    vertical-align: top;
+    white-space: pre-wrap;
+}
+td.diff-addedline, td.diff-deletedline {
+    border-radius: 0.33em 0.33em 0.33em 0.33em;
+    border-style: solid;
+    border-width: 1px 1px 1px 4px;
+}
+td.diff-addedline {
+    border-color: #A3D3FF;
+}
+td.diff-deletedline {
+    border-color: #FFE49C;
+}
+td.diff-context {
+    background: none repeat scroll 0 0 #F3F3F3;
+    border-color: #E6E6E6;
+    border-radius: 0.33em 0.33em 0.33em 0.33em;
+    border-style: solid;
+    border-width: 1px 1px 1px 4px;
+    color: #333333;
+}
+.diffchange {
+    font-weight: bold;
+    text-decoration: none;
+}
+table.diff {
+    border: medium none;
+    border-spacing: 4px;
+    table-layout: fixed;
+    width: 98%;
+}
+td.diff-addedline .diffchange, td.diff-deletedline .diffchange {
+    border-radius: 0.33em 0.33em 0.33em 0.33em;
+    padding: 0.25em 0;
+}
+td.diff-addedline .diffchange {
+    background: none repeat scroll 0 0 #D8ECFF;
+}
+td.diff-deletedline .diffchange {
+    background: none repeat scroll 0 0 #FEEEC8;
+}
+table.diff td {
+    padding: 0.33em 0.66em;
+}
+table.diff col.diff-marker {
+    width: 2%;
+}
+table.diff col.diff-content {
+    width: 48%;
+}
+table.diff td div {
+    overflow: auto;
+    word-wrap: break-word;
+}
