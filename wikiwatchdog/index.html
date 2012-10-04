@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf8">
-    <title>Wiki WatchDog</title>
+    <title>Wiki Watchdog</title>
     <link href="static/stylesheets/bootstrap.min.css" rel="stylesheet">
     <link href="static/stylesheets/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="static/stylesheets/diff.css" rel="stylesheet">
@@ -19,11 +19,24 @@
       <hr>
 
       <footer class="center">
-        <p>&copy; fox</p>
+        <p>
+          <!--[if lte IE 8]><span style="filter: FlipH; -ms-filter: "FlipH"; display: inline-block;"><![endif]-->
+          <span style="-moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
+            &copy;
+         </span>
+          <!--[if lte IE 8]></span><![endif]-->
+          <a href="http://volpino.github.com">Federico "fox" Scrinzi</a> of <a href="http://sonet.fbk.eu">SoNet@FBK</a>. We love but are not affiliated with Wikipedia. WikiWatchdog is <a href="https://github.com/volpino/WikiWatchdog">free software!</a>.
+        </p>
         <p>Powered by <a href="http://toolserver.org">Wikimedia Toolserver</a></p>
       </footer>
     </div>
 
+    <div id="loading" class="hide">
+      <div class="whole-page">
+        <div id="spin">
+          <h3 class="libertine center margin-top60">Your query is running... This may take a while</h3>
+      </div>
+    </div>
 
     <script type="text/template" id="home-template">
       <div class="row-fluid margin-top60">
@@ -31,22 +44,34 @@
         </div>
         <div class="span8">
           <div class="well well-white">
-            <h1 class="libertine center">Wiki WatchDog</h1>
-            <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-            <form id="search-form" class="center margin-top40">
-              <div class="row-fluid">
-                <div class="span1">
-                </div>
-                <div class="span8">
-                  <input id="search-text" type="text" class="nomargin width100" />
-                </div>
-                <div class="span2">
-                  <input id="search-button" type="submit" class="btn nomargin" value="Search">
-                </div>
-                <div class="span1">
-                </div>
-              </div>
+            <h1 class="libertine center">Wiki Watchdog</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta.
+              Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero.
+            </p>
+
+            <form id="search-form" class="form-inline center margin-top40">
+              Search edits by
+              <input placeholder="Insert a domain name (e.g.: fbk.eu)" id="search-text" type="text" class="input-xlarge nomargin">
+              on the
+              <select class="input-medium" id="search-lang">
+                <% for (lang in wiki_lang) { %>
+                  <option value="<%= lang %>" <% if (lang === "en") { %>selected="selected"<% } %>>
+                    <%= wiki_lang[lang] %> Wikipedia
+                  </option>
+                <% } %>
+              </select>
+              <input id="search-button" type="submit" class="btn nomargin margin-left10" value="Search">
             </form>
+
+            <div id="alert" class="alert alert-error hide">
+              <strong>Error!</strong> <span class="alert-msg"></span>
+            </div>
+
+            <div id="alert-warning" class="alert hide">
+              <strong>We're sorry!</strong> <span class="alert-msg"></span>
+            </div>
+
           </div>
         </div>
       </div>
@@ -55,7 +80,7 @@
 
       <div class="row-fluid">
         <div class="span4">
-          <h4 class="libertine">What's Wiki WatchDog?</h4>
+          <h4 class="libertine">What's Wiki Watchdog?</h4>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta. Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero. Vivamus ullamcorper sapien molestie magna convallis sit amet facilisis magna vulputate. Cras et pulvinar sem. Integer posuere interdum eros ut pharetra. Pellentesque eu ante pulvinar leo volutpat dictum
         </div>
 
@@ -74,35 +99,39 @@
     <script type="text/template" id="search-template">
       <h2 class="libertine"><a class="no-style" href=".">Wiki Watchdog</a></h2>
 
-      <div class="row-fluid">
-        <div class="span4">
-          <div class="row-fluid">
-            <div class="span10">
-              <input id="search-text" type="text" class="nomargin width90" value="<%= toSearch %>" />
-            </div>
-            <div class="span2">
-              <input id="search-button" type="button" type="submit" class="btn nomargin" value="Search">
-            </div>
-          </div>
-        </div>
-      </div>
+      <form id="search-form" class="form-inline">
+        <input id="search-text" type="text" class="nomargin" value="<%= toSearch %>">
+        on the
+        <select class="input-medium" id="search-lang">
+          <% for (l in wiki_lang) { %>
+            <option value="<%= l %>" <% if (l === lang) { %>selected="selected"<% } %>>
+              <%= wiki_lang[l] %> Wikipedia
+            </option>
+          <% } %>
+        </select>
+        <input id="search-button" type="submit" class="btn nomargin margin-left10" value="Search">
+      </form>
 
       <hr>
 
+      <h4>
+        Articles edited anonymously by <%= toSearch %> on the
+        <%= wiki_lang[lang] %> Wikipedia
+      </h4>
+
       <div class="row-fluid">
         <div class="span4">
-
-          <h5>
-            Articles edited anonymously by <%= toSearch %> on the English Wikipedia
-          </h5>
-
           <ul class="page-list nav nav-tabs nav-stacked">
             <% for (title in pages) { %>
               <li>
                 <a class="page-title"
-                   data-page = "<%= title %>"
-                   href="http://en.wikipedia.org/wiki/<%= title %>"
+                   data-page="<%= title %>"
+                   data-lang="<%= lang %>"
+                   href="#"
                    target="_blank">
+
+                  <i class="icon-chevron-down pull-right"></i>
+                  <i class="icon-chevron-up hide pull-right"></i>
 
                   <%= window.prettyTitle(title) %>
                   <p class="small">
@@ -136,29 +165,51 @@
           </ul>
         </div>
 
-        <div class="span8" id="diff-area">
+        <div class="span8 height100" id="diff-area">
         </div>
       </div>
     </script>
 
 
     <script type="text/template" id="diff-clear-template">
-      <h4>Select a page from the list</h4>
+      <div class="block" style="height: 350px;">
+        <div class="centered">
+          <h5>
+            Please, select an article from the list on the right
+          </h5>
+        </div>
+      </div>
     </script>
 
     <script type="text/template" id="diff-template">
-      <h4><%= prettyTitle(page) %></h4>
-
-      <p>See it on Wikipedia Wikitrip Manypedia</p>
-
+      <h3>
+        <%= prettyTitle(page) %>
+        <span class="wikilinks pull-right">
+          <a href="http://<%= lang %>.wikipedia.org/wiki/<%= page %>" target="_blank" rel="tooltip" title="Read on Wikipedia" class="libertine">W</a>
+          ~
+          <a href="http://manypedia.com/#|<%= lang %>|<%= page %>" target="_blank" rel="tooltip" title="Compare on Manypedia" class="libertine">M</a>
+          ~
+          <a href="http://sonetlab.fbk.eu/wikitrip/#|<%= lang %>|<%= page %>" target="_blank" rel="tooltip" title="History on WikiTrip" class="libertine">T</a>
+        </span>
+      </h3>
       <hr>
 
       <% if (error) { %>
         <p>There was an error</p>
       <% } else if (diff === "") { %>
-        <p>Please, select an edit from the list to view the diff</p>
-      <% } else { %>
-        <p><%= prettyTimestamp(edit.timestamp) %> - <%= edit.ip %> (<%= edit.domain %>)</p>
+        <p id="article-intro"></p>
+        <p id="article-link" class="hide">
+          <a class="black bold" href="http://<%= lang %>.wikipedia.org/wiki/<%= page %>" target="_blank">Continue on Wikipedia...</a>
+        </p>
+        <% } else { %>
+        <p>
+          <a class="black" rel="tooltip" title="See edit on Wikipedia" target="_blank"
+             href="http://<%= lang %>.wikipedia.org/w/index.php?title=<%= page %>&oldid=<%= edit.revid %>">
+            <%= prettyTimestamp(edit.timestamp) %>
+            -
+            <%= edit.ip %> (<%= edit.domain %>)
+          </a>
+        </p>
         <% if (edit.comment) { %>
           <p>Edit comment: <em><%= edit.comment %></em></p>
         <% } %>
@@ -182,8 +233,13 @@
     <script src="static/javascripts/underscore-min.js"></script>
     <script src="static/javascripts/backbone-min.js"></script>
 
+    <script src="static/javascripts/spin.min.js"></script>
+
+    <script src="static/javascripts/wiki_langs.js"></script>
+
+    <script src="static/javascripts/wikiwatchdog.js"></script>
+
     <script src="static/javascripts/views.js"></script>
     <script src="static/javascripts/routes.js"></script>
-    <script src="static/javascripts/wikiwatchdog.js"></script>
   </body>
 </html>
