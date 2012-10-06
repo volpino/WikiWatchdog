@@ -35,6 +35,7 @@ def get_page_title(ns, title):
 
 def process_ip(ip):
     start, end = gi.range_by_ip(ip)
+    pages = defaultdict(list)
 
     start_long, end_long = ip2long(start), ip2long(end)
 
@@ -54,7 +55,7 @@ def process_ip(ip):
 
     curs.execute(
         """SELECT SQL_CACHE rev_id, page_title, page_namespace, rev_timestamp,
-                            rev_user_text, rev_comment
+                            rev_user_text, rev_comment, page_id
            FROM revision JOIN page ON rev_page=page_id
            WHERE rev_user=0 AND rev_user_text LIKE ?
            ORDER BY rev_timestamp DESC""",
@@ -85,11 +86,16 @@ def process_ip(ip):
             page_title = get_page_title(
                 row["page_namespace"], row["page_title"]
             )
-            result["pages"][page_title].append(data)
+            pages[(page_title, row["page_id"])].append(data)
 
-    result["pages"] = OrderedDict(
-        sorted(result["pages"].items(), key=lambda x: len(x[1]), reverse=True)
+    pages = OrderedDict(
+        sorted(pages.items(), key=lambda x: len(x[1]), reverse=True)
     )
+
+    for key in pages:
+        result["pages"].append(
+            {"title": key[0], "id": key[1], "edits": pages[key]}
+        )
 
 
 GEOIP_PATH = "/home/sonet/GeoIPOrg.dat"
@@ -121,7 +127,7 @@ domain = form.getvalue("domain")
 lang = form.getvalue("lang") or "en"
 callback = form.getvalue("callback")
 
-result = {"pages": defaultdict(list), "stats": {}}
+result = {"pages": [], "stats": {}}
 
 gi = GeoIP.open(GEOIP_PATH, GeoIP.GEOIP_STANDARD)
 
