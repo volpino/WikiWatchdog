@@ -2,6 +2,7 @@ $(function () {
   $(".page-title").live("click", function (e) {
     var editList = $(this).siblings(".edit-list")
       , page = $(this).data("page")
+      , pageId = $(this).data("page-id")
       , lang = $(this).data("lang")
       , opts;
 
@@ -11,8 +12,12 @@ $(function () {
 
       $(this).find(".icon-chevron-down").show();
       $(this).find(".icon-chevron-up").hide();
+
+      window.router.navigate("search/" + lang + "/" + window.toSearch, {trigger: false});
     }
     else {
+      window.router.navigate("search/" + lang + "/" + encodeURI(window.toSearch) + "/" + pageId, {trigger: false});
+
       window.diffView.render(
         {page: page, diff: "", error: false, edit: "", lang: lang}
       );
@@ -39,16 +44,17 @@ $(function () {
         $("#article-intro").text(intro);
         $("#article-link").show();
       });
-   }
+    }
 
     e.preventDefault();
-    e.stopPropagation();
+    e.stopImmediatePropagation();
   });
 
   $(".edit-item").live("click", function (e) {
     var revId = $(this).data("revid")
       , $pageTitle = $(this).closest(".edit-list").siblings(".page-title")
       , page = $pageTitle.data("page")
+      , pageId = $pageTitle.data("page-id")
       , lang = $pageTitle.data("lang")
       , ip = $(this).data("ip")
       , domain = $(this).data("domain")
@@ -84,6 +90,8 @@ $(function () {
         window.diffView.render(diffData);
       }
     })
+
+    window.router.navigate("search/" + lang + "/" + window.toSearch + "/" + pageId + "/" + revId, {trigger: false});
 
     e.preventDefault();
     e.stopPropagation();
@@ -131,11 +139,4 @@ window.prettyTimestamp = function (ts) {
 
 window.prettyTitle = function (title) {
   return title.replace(/_/g, " ");
-}
-
-window.isEmpty = function (obj) {
-  for (key in obj) {
-    return false;
-  }
-  return true;
-}
+};

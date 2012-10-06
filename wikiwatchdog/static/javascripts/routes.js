@@ -1,5 +1,7 @@
 var AppRouter = Backbone.Router.extend({
     routes: {
+      "search/:lang/:toSearch/:page/:revid": "search",
+      "search/:lang/:toSearch/:page": "search",
       "search/:lang/:toSearch": "search",
       "help": "help",
       "*action": "home",
@@ -7,7 +9,8 @@ var AppRouter = Backbone.Router.extend({
     home: function () {
       window.homeView.render();
     },
-    search: function (lang, toSearch) {
+    search: function (lang, toSearch, page, revid) {
+      console.log(lang, toSearch, page, revid)
       var apiUrl = "http://toolserver.org/~sonet/cgi-bin/watchdog.py?callback=?";
 
       lang = escape(lang);
@@ -23,7 +26,7 @@ var AppRouter = Backbone.Router.extend({
           $("#search-text").val(toSearch);
           $("#search-lang").val(lang);
         }
-        else if (window.isEmpty(data.pages)) {
+        else if (data.pages.length === 0) {
           window.router.navigate("/", {trigger: true});
           $("#alert-warning")
             .show()
@@ -31,9 +34,18 @@ var AppRouter = Backbone.Router.extend({
           $("#search-text").val(toSearch);
           $("#search-lang").val(lang);
         }
-        else
+        else {
+          window.toSearch = toSearch;
           window.searchView.render(lang, toSearch, data);
+        }
         window.hideLoading();
+
+        if (page) {
+          $("#page-" + page).click();
+          $(".page-list").scrollTop($("#page-" + page).offset().top - 200);
+        }
+        if (revid)
+          $("#revid-" + revid).click();
       });
     },
     help: function () {

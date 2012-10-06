@@ -122,10 +122,14 @@
       <div class="row-fluid">
         <div class="span4">
           <ul class="page-list nav nav-tabs nav-stacked">
-            <% for (title in pages) { %>
+            <% for (var i=0; i<pages.length; i++) { %>
+            <% var edits = pages[i].edits; %>
+            <% var title = pages[i].title; %>
               <li>
                 <a class="page-title"
+                   id="page-<%= pages[i].id %>"
                    data-page="<%= title %>"
+                   data-page-id="<%= pages[i].id %>"
                    data-lang="<%= lang %>"
                    href="#"
                    target="_blank">
@@ -135,26 +139,28 @@
 
                   <%= window.prettyTitle(title) %>
                   <p class="small">
-                    (<%= pages[title].length %>
-                     edit<% if (pages[title].length > 1) { %>s<% } %>)
+                    (<%= edits.length %>
+                     edit<% if (edits.length > 1) { %>s<% } %>)
                   </p>
                 </a>
                 <ul class="edit-list well well-white hide">
-                  <% for (var i=0; i<pages[title].length; i++) { %>
+                    <% for (var j=0; j<edits.length; j++) { %>
+                    <% var edit = edits[j]; %>
                     <li>
                       <a class="edit-item"
-                         data-revid="<%= pages[title][i].id %>"
-                         data-timestamp="<%= pages[title][i].timestamp %>"
-                         data-ip="<%= pages[title][i].ip %>"
-                         data-domain="<%= pages[title][i].domain %>"
-                         data-comment="<%= pages[title][i].comment %>"
+                         id="revid-<%= edit.id %>"
+                         data-revid="<%= edit.id %>"
+                         data-timestamp="<%= edit.timestamp %>"
+                         data-ip="<%= edit.ip %>"
+                         data-domain="<%= edit.domain %>"
+                         data-comment="<%= edit.comment %>"ent="<%= edit.comment %>"
                          href="#">
-                        <%= window.prettyTimestamp(pages[title][i].timestamp) %>
+                        <%= window.prettyTimestamp(edit.timestamp) %>
                       </a>
                       <p class="small">
-                        <%= pages[title][i].ip %>
-                        <% if (pages[title][i].domain) { %>
-                          (<%= pages[title][i].domain %>)
+                        <%= edit.ip %>
+                        <% if (edit.domain) { %>
+                          (<%= edit.domain %>)
                         <% } %>
                       </p>
                     </li>
