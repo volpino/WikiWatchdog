@@ -30,6 +30,10 @@ var SearchView = Backbone.View.extend({
     var json_data = data;
     json_data.toSearch = toSearch;
     json_data.lang = lang;
+    json_data.total_edits = 0;
+    $.each(data.pages, function () {
+      json_data.total_edits += this.edits.length;
+    });
 
     $(this.el).html(this.template(json_data));
 

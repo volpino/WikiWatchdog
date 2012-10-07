@@ -119,6 +119,11 @@
         <%= wiki_lang[lang] %> Wikipedia
       </h4>
 
+      <p>
+        <%= pages.length %> articles edited (<%= total_edits %> edits)
+        - Query executed in <%= Math.round(stats.execution_time * 100) / 100 %> sec.
+      </p>
+
       <div class="row-fluid">
         <div class="span4">
           <ul class="page-list nav nav-tabs nav-stacked">

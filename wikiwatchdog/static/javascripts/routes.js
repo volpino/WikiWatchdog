@@ -10,7 +10,6 @@ var AppRouter = Backbone.Router.extend({
       window.homeView.render();
     },
     search: function (lang, toSearch, page, revid) {
-      console.log(lang, toSearch, page, revid)
       var apiUrl = "http://toolserver.org/~sonet/cgi-bin/watchdog.py?callback=?";
 
       lang = escape(lang);
