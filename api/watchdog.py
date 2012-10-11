@@ -9,6 +9,9 @@
 import cgi
 
 import os
+import sys
+import gzip
+import cStringIO
 from socket import gethostbyname, gethostbyaddr, inet_aton
 from struct import unpack
 from collections import defaultdict, OrderedDict
@@ -54,7 +57,8 @@ def process_ip(ip):
     curs = db.cursor(oursql.DictCursor)
 
     curs.execute(
-        """SELECT rev_id, page_title, page_namespace, rev_timestamp,
+        """SELECT /* SLOW_OK */
+                  rev_id, page_title, page_namespace, rev_timestamp,
                   rev_user_text, rev_comment, page_id
            FROM revision JOIN page ON rev_page=page_id
            WHERE rev_user=0 AND rev_user_text LIKE ?
@@ -195,10 +199,19 @@ if ip:
     #    result["error"] = "%s is not an organization domain" % domain
 
 json_data = json.dumps(result)
-
-print "Content-type:application/json\r\n\r\n"
-
 if callback:
-    print "%s(%s)" % (callback, json_data)
+    json_data = "%s(%s)" % (callback, json_data)
+
+if "gzip" in os.environ.get("HTTP_ACCEPT_ENCODING", ""):
+    zbuf = cStringIO.StringIO()
+    zfile = gzip.GzipFile(mode='wb', fileobj=zbuf)
+    zfile.write(json_data)
+    zfile.close()
+    zdata = zbuf.getvalue()
+    sys.stdout.write("Content-Encoding: gzip\r\n")
+    sys.stdout.write("Content-Length: %d\r\n" % len(zdata))
+    sys.stdout.write("Content-type: application/json\r\n\r\n")
+    sys.stdout.write(zdata)
 else:
-    print json_data
+    sys.stdout.write("Content-type:application/json\r\n\r\n")
+    sys.stdout.write(json_data)
