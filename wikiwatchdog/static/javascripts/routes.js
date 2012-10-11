@@ -16,35 +16,52 @@ var AppRouter = Backbone.Router.extend({
       toSearch = escape(toSearch);
 
       window.showLoading();
-      $.getJSON(apiUrl, {domain: toSearch, lang: lang}, function (data) {
-        if (data.error) {
-          window.router.navigate("/", {trigger: true});
-          $("#alert")
-            .show()
-            .find(".alert-msg").text(data.error);
-          $("#search-text").val(toSearch);
-          $("#search-lang").val(lang);
-        }
-        else if (data.pages.length === 0) {
-          window.router.navigate("/", {trigger: true});
-          $("#alert-warning")
-            .show()
-            .find(".alert-msg").text("No results found for domain " + toSearch);
-          $("#search-text").val(toSearch);
-          $("#search-lang").val(lang);
-        }
-        else {
-          window.toSearch = toSearch;
-          window.searchView.render(lang, toSearch, data);
-        }
-        window.hideLoading();
+      $.ajax({
+        url: apiUrl,
+        dataType: "json",
+        data: {domain: toSearch, lang: lang},
+        success: function (data) {
+          if (data.error) {
+            window.router.navigate("/", {trigger: true});
+            $("#alert")
+              .show()
+              .find(".alert-msg").text(data.error);
+            $("#search-text").val(toSearch);
+            $("#search-lang").val(lang);
+          }
+          else if (data.pages.length === 0) {
+            window.router.navigate("/", {trigger: true});
+            $("#alert-warning")
+              .show()
+              .find(".alert-msg").text("No results found for domain " + toSearch);
+            $("#search-text").val(toSearch);
+            $("#search-lang").val(lang);
+          }
+          else {
+            window.toSearch = toSearch;
+            window.searchView.render(lang, toSearch, data);
+          }
+          window.hideLoading();
 
-        if (page) {
-          $("#page-" + page).click();
-          $(".page-list").scrollTop($("#page-" + page).offset().top - 200);
+          if (page) {
+            $("#page-" + page).click();
+            $(".page-list").scrollTop($("#page-" + page).offset().top - 200);
+          }
+          if (revid)
+            $("#revid-" + revid).click();
+        },
+        timeout: 15000,
+        error: function (xhr, status) {
+          if (status === "timeout") {
+            window.router.navigate("/", {trigger: true});
+              $("#alert-warning")
+                .show()
+                .find(".alert-msg").text("Looks like the query is taking too long. We received your submission, please retry in a few minutes");
+              $("#search-text").val(toSearch);
+              $("#search-lang").val(lang);
+            window.hideLoading();
+          }
         }
-        if (revid)
-          $("#revid-" + revid).click();
       });
     },
     help: function () {

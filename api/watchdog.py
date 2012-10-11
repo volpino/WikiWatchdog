@@ -54,8 +54,8 @@ def process_ip(ip):
     curs = db.cursor(oursql.DictCursor)
 
     curs.execute(
-        """SELECT SQL_CACHE rev_id, page_title, page_namespace, rev_timestamp,
-                            rev_user_text, rev_comment, page_id
+        """SELECT rev_id, page_title, page_namespace, rev_timestamp,
+                  rev_user_text, rev_comment, page_id
            FROM revision JOIN page ON rev_page=page_id
            WHERE rev_user=0 AND rev_user_text LIKE ?
            ORDER BY rev_timestamp DESC""",
@@ -66,19 +66,19 @@ def process_ip(ip):
         ip_long = ip2long(row["rev_user_text"])
         if ip_long >= start_long and ip_long <= end_long:
             if row["rev_user_text"] in REVERSE_DNS_CACHE:
-                domain = REVERSE_DNS_CACHE[row["rev_user_text"]]
+                dns = REVERSE_DNS_CACHE[row["rev_user_text"]]
             else:
                 try:
-                    domain = gethostbyaddr(row["rev_user_text"])[0]
+                    dns = gethostbyaddr(row["rev_user_text"])[0]
                 except:
-                    domain = None
+                    dns = None
                 finally:
-                    REVERSE_DNS_CACHE[row["rev_user_text"]] = domain
+                    REVERSE_DNS_CACHE[row["rev_user_text"]] = dns
 
             data = {
                 "timestamp": row["rev_timestamp"],
                 "ip": row["rev_user_text"],
-                "domain": domain,
+                "domain": dns,
                 "id": row["rev_id"],
                 "comment": row["rev_comment"]
             }
@@ -87,6 +87,8 @@ def process_ip(ip):
                 row["page_namespace"], row["page_title"]
             )
             pages[(page_title, row["page_id"])].append(data)
+        else:
+            result["stats"]["removed"] += 1
 
     pages = OrderedDict(
         sorted(pages.items(), key=lambda x: len(x[1]), reverse=True)
@@ -97,6 +99,13 @@ def process_ip(ip):
             {"title": key[0], "id": key[1], "edits": pages[key]}
         )
 
+
+CACHE_DIR = "/home/sonet/wikiwatchdog_tmp/cache/"
+if not os.path.isdir(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
+SPOOLER_DIR = "/home/sonet/wikiwatchdog_tmp/spooler/"
+if not os.path.isdir(SPOOLER_DIR):
+    os.makedirs(SPOOLER_DIR)
 
 GEOIP_PATH = "/home/sonet/GeoIPOrg.dat"
 
@@ -125,9 +134,10 @@ form = cgi.FieldStorage()
 ip = form.getvalue("ip")
 domain = form.getvalue("domain")
 lang = form.getvalue("lang") or "en"
+no_cache = form.getvalue("nocache")
 callback = form.getvalue("callback")
 
-result = {"pages": [], "stats": {}}
+result = {"pages": [], "stats": {"removed": 0, "cached": False}}
 
 gi = GeoIP.open(GEOIP_PATH, GeoIP.GEOIP_STANDARD)
 
@@ -144,17 +154,51 @@ if domain is not None:
 if ip:
     org = gi.org_by_addr(ip)
 
-    if org:
+    start, end = gi.range_by_ip(ip)
+
+    path = os.path.join(CACHE_DIR, "%s_%s_%s" % (lang, start, end))
+
+    if not no_cache:
+        try:
+            with open(path) as f:
+                data = json.load(f)
+                result["pages"] = data
+                result["stats"]["cached"] = True
+        except IOError:
+            pass
+    if not result["pages"]:
+        s_path = os.path.join(
+            SPOOLER_DIR, "lang=%s&domain=%s" % (lang, domain)
+        )
+        try:
+            open(s_path, "w")
+        except IOError:
+            pass
+
         process_ip(ip)
-    else:
-        result["error"] = "%s is not an organization domain" % domain
 
+        try:
+            os.remove(s_path)
+        except OSError:
+            pass
 
-result["stats"]["execution_time"] = time() - START_TIME
+    result["stats"]["execution_time"] = time() - START_TIME
+
+    if result["stats"]["execution_time"] > 10:
+        start, end = gi.range_by_ip(ip)
+        with open(path, "w") as f:
+            f.write(json.dumps(result["pages"]))
+
+    #if org:
+    #    process_ip(ip)
+    #else:
+    #    result["error"] = "%s is not an organization domain" % domain
+
+json_data = json.dumps(result)
 
 print "Content-type:application/json\r\n\r\n"
 
 if callback:
-    print "%s(%s)" % (callback, json.dumps(result))
+    print "%s(%s)" % (callback, json_data)
 else:
-    print json.dumps(result)
+    print json_data
