@@ -104,9 +104,12 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     vertical-align: middle;
 }
 
-.page-list {
-    max-height: 450px;
-    overflow-y: auto;
+
+@media(min-width: 768px) {
+    .page-list {
+        max-height: 450px;
+        overflow-y: auto;
+    }
 }
 
 .page-title {

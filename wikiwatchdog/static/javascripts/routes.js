@@ -20,6 +20,7 @@ var AppRouter = Backbone.Router.extend({
         url: apiUrl,
         dataType: "json",
         data: {domain: toSearch, lang: lang},
+        cache: true,
         success: function (data) {
           if (data.error) {
             window.router.navigate("/", {trigger: true});
@@ -45,12 +46,11 @@ var AppRouter = Backbone.Router.extend({
 
           if (page) {
             $("#page-" + page).click();
-            $(".page-list").scrollTop($("#page-" + page).offset().top - 200);
           }
           if (revid)
             $("#revid-" + revid).click();
         },
-        timeout: 15000,
+        timeout: 20000,
         error: function (xhr, status) {
           if (status === "timeout") {
             window.router.navigate("/", {trigger: true});

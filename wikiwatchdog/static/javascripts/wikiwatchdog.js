@@ -1,6 +1,7 @@
 $(function () {
   $(".page-title").live("click", function (e) {
-    var editList = $(this).siblings(".edit-list")
+    var $this = $(this)
+      , editList = $(this).siblings(".edit-list")
       , page = $(this).data("page")
       , pageId = $(this).data("page-id")
       , lang = $(this).data("lang")
@@ -10,8 +11,8 @@ $(function () {
       window.diffView.clear();
       editList.slideUp();
 
-      $(this).find(".icon-chevron-down").show();
-      $(this).find(".icon-chevron-up").hide();
+      $this.find(".icon-chevron-down").show();
+      $this.find(".icon-chevron-up").hide();
 
       window.router.navigate("search/" + lang + "/" + window.toSearch, {trigger: false});
     }
@@ -22,7 +23,21 @@ $(function () {
         {page: page, diff: "", error: false, edit: "", lang: lang}
       );
 
-      editList.slideDown();
+      $(".edit-list").hide(0);
+
+      editList.slideDown(function () {
+        var $pageList = $(".page-list");
+        if ($pageList.css("max-height") !== "none") {  // is not mobile
+          if (!window.isVisibleOverflow($this, $pageList)) {
+            $pageList.scrollTop($pageList.scrollTop() + $this.position().top - 192);
+          }
+        }
+        else {
+          if (!window.isVisible($this, $pageList)) {
+            $(window).scrollTop($this.offset().top);
+          }
+        }
+      });
 
       $(this).find(".icon-chevron-down").hide();
       $(this).find(".icon-chevron-up").show();
@@ -89,6 +104,11 @@ $(function () {
         }
         window.diffView.render(diffData);
       }
+
+      if (!isVisible($("#diff-area").find("h3").eq(0))) {
+        // for mobile scroll to content
+        $(window).scrollTop($("#diff-area").offset().top);
+      }
     })
 
     window.router.navigate("search/" + lang + "/" + window.toSearch + "/" + pageId + "/" + revId, {trigger: false});
@@ -139,4 +159,20 @@ window.prettyTimestamp = function (ts) {
 
 window.prettyTitle = function (title) {
   return title.replace(/_/g, " ");
+};
+
+window.isVisibleOverflow = function ($element, $scrollable) {
+  var docViewTop = $scrollable.scrollTop()
+    , docViewBottom = docViewTop + $scrollable.height()
+    , elemTop = docViewTop + $element.position().top
+    , elemBottom = elemTop + $element.height();
+  return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+};
+
+window.isVisible = function ($element) {
+  var docViewTop = $(window).scrollTop()
+    , docViewBottom = docViewTop + $(window).height()
+    , elemTop = $element.offset().top
+    , elemBottom = elemTop + $element.height();
+  return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
