@@ -16,7 +16,7 @@ var HomeView = Backbone.View.extend({
     var toSearch = $("#search-text").val()
       , lang = $("#search-lang").val();
 
-    window.router.navigate("search/" + lang + "/" + toSearch, {trigger: true});
+    window.router.navigate("!search/" + lang + "/" + toSearch, {trigger: true});
     return this
   }
 });
@@ -49,7 +49,7 @@ var SearchView = Backbone.View.extend({
     var toSearch = $("#search-text").val()
       , lang = $("#search-lang").val();
 
-    window.router.navigate("search/" + lang + "/" + toSearch, {trigger: true});
+    window.router.navigate("!search/" + lang + "/" + toSearch, {trigger: true});
     return this
   }
 

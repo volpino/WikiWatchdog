@@ -1,9 +1,9 @@
 var AppRouter = Backbone.Router.extend({
     routes: {
-      "search/:lang/:toSearch/:page/:revid": "search",
-      "search/:lang/:toSearch/:page": "search",
-      "search/:lang/:toSearch": "search",
-      "help": "help",
+      "!search/:lang/:toSearch/:page/:revid": "search",
+      "!search/:lang/:toSearch/:page": "search",
+      "!search/:lang/:toSearch": "search",
+      "!help": "help",
       "*action": "home",
     },
     home: function () {
