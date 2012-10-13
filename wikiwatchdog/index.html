@@ -8,6 +8,7 @@
     <link href="static/stylesheets/diff.css" rel="stylesheet">
     <link href="static/stylesheets/style.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<meta name="fragment" content="!">-->
   </head>
   <body>
 
@@ -124,7 +125,7 @@
         - Query executed in <%= Math.round(stats.execution_time * 100) / 100 %> sec.
       </p>
 
-      <div class="row-fluid">
+      <div class="row-fluid" id="top-anchor">
         <div class="span4">
           <ul class="page-list nav nav-tabs nav-stacked">
             <% for (var i=0; i<pages.length; i++) { %>
@@ -195,7 +196,10 @@
     <script type="text/template" id="diff-template">
       <h3>
         <%= prettyTitle(page) %>
-        <span class="wikilinks pull-right">
+
+        <a class="visible-phone font13 black" id="go-to-top" href="#top-anchor">Top ↑</a>
+
+        <span class="wikilinks hidden-phone pull-right">
           <a href="http://<%= lang %>.wikipedia.org/wiki/<%= page %>" target="_blank" rel="tooltip" title="Read on Wikipedia" class="libertine">W</a>
           ~
           <a href="http://manypedia.com/#|<%= lang %>|<%= page %>" target="_blank" rel="tooltip" title="Compare on Manypedia" class="libertine">M</a>
@@ -203,6 +207,7 @@
           <a href="http://sonetlab.fbk.eu/wikitrip/#|<%= lang %>|<%= page %>" target="_blank" rel="tooltip" title="History on WikiTrip" class="libertine">T</a>
         </span>
       </h3>
+
       <hr>
 
       <% if (error) { %>
@@ -212,15 +217,29 @@
         <p id="article-link" class="hide">
           <a class="black bold" href="http://<%= lang %>.wikipedia.org/wiki/<%= page %>" target="_blank">Continue on Wikipedia...</a>
         </p>
-        <% } else { %>
-        <p>
-          <a class="black" rel="tooltip" title="See edit on Wikipedia" target="_blank"
-             href="http://<%= lang %>.wikipedia.org/w/index.php?title=<%= page %>&oldid=<%= edit.revid %>">
-            <%= prettyTimestamp(edit.timestamp) %>
-            -
-            <%= edit.ip %> (<%= edit.domain %>)
-          </a>
-        </p>
+      <% } else { %>
+
+        <div class="row-fluid">
+          <div class="span8">
+            <a class="black" rel="tooltip" title="See edit on Wikipedia" target="_blank"
+               href="http://<%= lang %>.wikipedia.org/w/index.php?title=<%= page %>&oldid=<%= edit.revid %>">
+              <%= prettyTimestamp(edit.timestamp) %>
+              -
+              <%= edit.ip %> (<%= edit.domain %>)
+            </a>
+          </div>
+          <div class="span4">
+            <ul class="inline-list hidden-phone">
+              <li>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-text="<%= prettyTitle(page) %> - <%= toSearch %> on @Wikiwatchdog" data-count="none">Tweet</a>
+                <%= '<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</' + 'script>' %>
+              </li>
+              <li>
+                <div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+              </li>
+            </ul>
+          </div>
+        </div>
         <% if (edit.comment) { %>
           <p>Edit comment: <em><%= edit.comment %></em></p>
         <% } %>
@@ -245,6 +264,16 @@
     <script src="static/javascripts/backbone-min.js"></script>
 
     <script src="static/javascripts/spin.min.js"></script>
+
+  <!-- Facebook sdk -->
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/it_IT/all.js#xfbml=1&appId=237970542997906";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
 
     <script src="static/javascripts/wiki_langs.js"></script>
 

@@ -1,4 +1,11 @@
 $(function () {
+  $("#go-to-top").live("click", function (e) {
+    $(window).scrollTop($("#top-anchor").offset().top);
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  });
+
   $(".page-title").live("click", function (e) {
     var $this = $(this)
       , editList = $(this).siblings(".edit-list")
@@ -63,7 +70,7 @@ $(function () {
     }
 
     e.preventDefault();
-    e.stopImmediatePropagation();
+    e.stopPropagation();
   });
 
   $(".edit-item").live("click", function (e) {

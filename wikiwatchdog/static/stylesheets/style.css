@@ -41,6 +41,10 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     margin-top: 60px;
 }
 
+.font13 {
+    font-size: 13px;
+}
+
 .center {
     text-align: center;
 }
@@ -104,6 +108,19 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     vertical-align: middle;
 }
 
+ul.inline-list {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 5px 0;
+    float: left;
+    width: 100%;
+}
+
+ul.inline-list li{
+    display: block;
+    float: left;
+    margin-right: 15px;
+}
 
 @media(min-width: 768px) {
     .page-list {
