@@ -36,8 +36,12 @@ def get_page_title(ns, title):
         return "%s:%s" % (NAMESPACES[ns], title)
 
 
-def process_ip(ip):
-    start, end = gi.range_by_ip(ip)
+def process_ip(ip, no_range=False):
+    if no_range:
+        start, end = ip, ip
+    else:
+        start, end = gi.range_by_ip(ip)
+
     pages = defaultdict(list)
 
     start_long, end_long = ip2long(start), ip2long(end)
@@ -139,6 +143,7 @@ ip = form.getvalue("ip")
 domain = form.getvalue("domain")
 lang = form.getvalue("lang") or "en"
 no_cache = form.getvalue("nocache")
+no_range = form.getvalue("norange")
 callback = form.getvalue("callback")
 
 result = {"pages": [], "stats": {"removed": 0, "cached": False}}
@@ -158,7 +163,10 @@ if domain is not None:
 if ip:
     org = gi.org_by_addr(ip)
 
-    start, end = gi.range_by_ip(ip)
+    if no_range:
+        start, end = ip, ip
+    else:
+        start, end = gi.range_by_ip(ip)
 
     path = os.path.join(CACHE_DIR, "%s_%s_%s" % (lang, start, end))
 
@@ -179,7 +187,7 @@ if ip:
         except IOError:
             pass
 
-        process_ip(ip)
+        process_ip(ip, no_range)
 
         try:
             os.remove(s_path)
@@ -189,7 +197,6 @@ if ip:
     result["stats"]["execution_time"] = time() - START_TIME
 
     if result["stats"]["execution_time"] > 10:
-        start, end = gi.range_by_ip(ip)
         with open(path, "w") as f:
             f.write(json.dumps(result["pages"]))
 
