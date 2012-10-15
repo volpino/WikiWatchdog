@@ -170,9 +170,9 @@ window.prettyTitle = function (title) {
 };
 
 window.isVisibleOverflow = function ($element, $scrollable) {
-  var docViewTop = $scrollable.scrollTop()
+  var docViewTop = $scrollable.position().top
     , docViewBottom = docViewTop + $scrollable.height()
-    , elemTop = docViewTop + $element.position().top
+    , elemTop = $element.position().top
     , elemBottom = elemTop + $element.height();
   return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
