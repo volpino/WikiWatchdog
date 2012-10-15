@@ -10,16 +10,24 @@ var AppRouter = Backbone.Router.extend({
       window.homeView.render();
     },
     search: function (lang, toSearch, page, revid) {
-      var apiUrl = "http://toolserver.org/~sonet/cgi-bin/watchdog.py?callback=?";
+      var apiUrl = "http://toolserver.org/~sonet/cgi-bin/watchdog.py?callback=?"
+        , opts;
 
       lang = escape(lang);
       toSearch = escape(toSearch);
+
+      opts = {domain: toSearch, lang: lang};
+
+      // if the given domain is an ip don't look for its range,
+      // make an exact match query
+      if (window.isIP(toSearch))
+        opts["norange"] = 1;
 
       window.showLoading();
       $.ajax({
         url: apiUrl,
         dataType: "json",
-        data: {domain: toSearch, lang: lang},
+        data: opts,
         cache: true,
         success: function (data) {
           if (data.error) {

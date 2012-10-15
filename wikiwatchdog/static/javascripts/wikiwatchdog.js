@@ -184,3 +184,7 @@ window.isVisible = function ($element) {
     , elemBottom = elemTop + $element.height();
   return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
+
+window.isIP = function (string) {
+  return string.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/);
+};
