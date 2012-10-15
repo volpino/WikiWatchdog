@@ -63,6 +63,8 @@ var DiffView = Backbone.View.extend({
   render: function (data) {
     $("#diff-area").html(this.template(data));
     $("[rel=tooltip]").tooltip();
+    twttr.widgets.load();
+    FB.XFBML.parse();
     return this;
   },
 
