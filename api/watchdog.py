@@ -144,7 +144,19 @@ domain = form.getvalue("domain")
 lang = form.getvalue("lang") or "en"
 no_cache = form.getvalue("nocache")
 no_range = form.getvalue("norange")
+page_limit = form.getvalue("page_limit")
+page_offset = form.getvalue("page_offset")
 callback = form.getvalue("callback")
+
+try:
+    page_limit = int(page_limit)
+except TypeError, ValueError:
+    page_limit = None
+
+try:
+    page_offset = int(page_offset)
+except TypeError, ValueError:
+    page_offset = None
 
 result = {"pages": [], "stats": {"removed": 0, "cached": False}}
 
@@ -204,6 +216,12 @@ if ip:
     #    process_ip(ip)
     #else:
     #    result["error"] = "%s is not an organization domain" % domain
+
+if page_offset:
+    result["pages"] = result["pages"][page_offset:]
+
+if page_limit:
+    result["pages"] = result["pages"][:page_limit]
 
 json_data = json.dumps(result)
 if callback:

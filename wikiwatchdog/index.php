@@ -8,9 +8,23 @@
     <link href="static/stylesheets/diff.css" rel="stylesheet">
     <link href="static/stylesheets/style.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<meta name="fragment" content="!">-->
+    <meta name="author" content="Federico 'fox' Scrinzi">
   </head>
   <body>
+
+    <?php
+      if (isset($_GET["_escaped_fragment_"])) {
+        $param = $_GET["_escaped_fragment_"];
+        preg_match('/search\/([^\/]+)\/([^\/]+)(\/.*)?/', $param, $matches);
+        $content = file_get_contents('http://toolserver.org/~sonet/cgi-bin/watchdog.py?lang='.$matches[1].'&domain='.$matches[2]);
+        $json = json_decode($content);
+        echo "<ul>";
+        foreach ($json->pages as $page) {
+          echo "<li>".$page->title."</li>";
+        }
+        echo "</ul>";
+      }
+    ?>
 
     <div class="container-fluid">
 
@@ -98,7 +112,7 @@
     </script>
 
     <script type="text/template" id="search-template">
-      <h2 class="libertine"><a class="no-style" href=".">Wiki Watchdog</a></h2>
+      <h2 class="libertine"><a class="no-style" href="#">Wiki Watchdog</a></h2>
 
       <form id="search-form" class="form-inline">
         <input id="search-text" type="text" class="nomargin" value="<%= toSearch %>">
@@ -128,52 +142,6 @@
       <div class="row-fluid" id="top-anchor">
         <div class="span4">
           <ul class="page-list nav nav-tabs nav-stacked">
-            <% for (var i=0; i<pages.length; i++) { %>
-            <% var edits = pages[i].edits; %>
-            <% var title = pages[i].title; %>
-              <li>
-                <a class="page-title"
-                   id="page-<%= pages[i].id %>"
-                   data-page="<%= title %>"
-                   data-page-id="<%= pages[i].id %>"
-                   data-lang="<%= lang %>"
-                   href="#"
-                   target="_blank">
-
-                  <i class="icon-chevron-down pull-right"></i>
-                  <i class="icon-chevron-up hide pull-right"></i>
-
-                  <%= window.prettyTitle(title) %>
-                  <p class="small">
-                    (<%= edits.length %>
-                     edit<% if (edits.length > 1) { %>s<% } %>)
-                  </p>
-                </a>
-                <ul class="edit-list well well-white hide">
-                    <% for (var j=0; j<edits.length; j++) { %>
-                    <% var edit = edits[j]; %>
-                    <li>
-                      <a class="edit-item"
-                         id="revid-<%= edit.id %>"
-                         data-revid="<%= edit.id %>"
-                         data-timestamp="<%= edit.timestamp %>"
-                         data-ip="<%= edit.ip %>"
-                         data-domain="<%= edit.domain %>"
-                         data-comment="<%= edit.comment %>"ent="<%= edit.comment %>"
-                         href="#">
-                        <%= window.prettyTimestamp(edit.timestamp) %>
-                      </a>
-                      <p class="small">
-                        <%= edit.ip %>
-                        <% if (edit.domain) { %>
-                          (<%= edit.domain %>)
-                        <% } %>
-                      </p>
-                    </li>
-                  <% } %>
-                </ul>
-              </li>
-            <% } %>
           </ul>
         </div>
 
@@ -182,6 +150,57 @@
       </div>
     </script>
 
+    <script type="text/template" id="page-list-template">
+      <% for (var i=0; i<pages.length; i++) { %>
+        <% var edits = pages[i].edits; %>
+        <% var title = pages[i].title; %>
+        <li>
+          <a class="page-title"
+             id="page-<%= pages[i].id %>"
+             data-page="<%= title %>"
+             data-page-id="<%= pages[i].id %>"
+             data-lang="<%= lang %>"
+             href="#"
+             target="_blank">
+
+            <i class="icon-chevron-down pull-right"></i>
+            <i class="icon-chevron-up hide pull-right"></i>
+
+            <%= window.prettyTitle(title) %>
+            <p class="small">
+              (<%= edits.length %>
+              edit<% if (edits.length > 1) { %>s<% } %>)
+            </p>
+          </a>
+          <ul class="edit-list well well-white hide">
+            <% for (var j=0; j<edits.length; j++) { %>
+              <% var edit = edits[j]; %>
+              <li>
+                <a class="edit-item"
+                   id="revid-<%= edit.id %>"
+                   data-revid="<%= edit.id %>"
+                   data-timestamp="<%= edit.timestamp %>"
+                   data-ip="<%= edit.ip %>"
+                   data-domain="<%= edit.domain %>"
+                   data-comment="<%= edit.comment %>"ent="<%= edit.comment %>"
+                   href="#">
+                    <%= window.prettyTimestamp(edit.timestamp) %>
+                </a>
+                <p class="small">
+                  <%= edit.ip %>
+                  <% if (edit.domain) { %>
+                    (<%= edit.domain %>)
+                  <% } %>
+                </p>
+              </li>
+            <% } %>
+          </ul>
+        </li>
+      <% } %>
+      <li>
+        <span class="load-more btn center visible-phone">Load more...</span>
+      </li>
+    </script>
 
     <script type="text/template" id="diff-clear-template">
       <div class="block" style="height: 350px;">
@@ -197,7 +216,7 @@
       <h3>
         <%= prettyTitle(page) %>
 
-        <a class="visible-phone font13 black" id="go-to-top" href="#top-anchor">Top ↑</a>
+        <a class="visible-phone font13 black" id="go-to-top" href="#top-anchor" data-to-top="#page-<%= pageId %>">Back to edit list ↑</a>
 
         <span class="wikilinks hidden-phone pull-right">
           <a href="http://<%= lang %>.wikipedia.org/wiki/<%= page %>" target="_blank" rel="tooltip" title="Read on Wikipedia" class="libertine">W</a>
@@ -275,6 +294,18 @@
     }(document, 'script', 'facebook-jssdk'));</script>
 
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-56174-30']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 
     <script src="static/javascripts/wiki_langs.js"></script>
 

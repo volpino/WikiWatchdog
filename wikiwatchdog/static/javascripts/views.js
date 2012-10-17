@@ -24,10 +24,19 @@ var HomeView = Backbone.View.extend({
 
 var SearchView = Backbone.View.extend({
   template: _.template($('#search-template').html()),
+  pageListTemplate: _.template($('#page-list-template').html()),
   el: "#content",
+  isLoading: false,
+  scrollOffset: window.apiPageLimit,
 
   render: function (lang, toSearch, data) {
-    var json_data = data;
+    var self = this
+      , json_data = data
+      , $pageList;
+
+    this.lang = lang;
+    this.toSearch = toSearch;
+
     json_data.toSearch = toSearch;
     json_data.lang = lang;
     json_data.total_edits = 0;
@@ -36,13 +45,18 @@ var SearchView = Backbone.View.extend({
     });
 
     $(this.el).html(this.template(json_data));
+    $pageList = $(this.el).find(".page-list")
+
+    $pageList.html(this.pageListTemplate(json_data));
+    $pageList.on("scroll", function () { self.scroll() });
 
     window.diffView.clear();
     return this;
   },
 
   events: {
-    "submit #search-form": "search"
+    "submit #search-form": "search",
+    "click .load-more": "loadMore"
   },
 
   search: function () {
@@ -51,8 +65,64 @@ var SearchView = Backbone.View.extend({
 
     window.router.navigate("!search/" + lang + "/" + toSearch, {trigger: true});
     return this
-  }
+  },
 
+  scroll: function () {
+    // Note: This method is not called on mobile devices
+    var self = this
+      , $pageList = $(this.el).find(".page-list")
+      , $scrollLoading
+      , triggerPoint = 200
+      , opts
+      , checkHeight = $pageList.scrollTop() + $pageList.height() + triggerPoint;
+
+    if (!this.isLoading && (checkHeight > $pageList[0].scrollHeight)) {
+      this.isLoading = true;
+
+      $scrollLoading = $("<li/>")
+        .addClass("scroll-loading")
+        .addClass("center")
+        .html("<img src='static/img/loading.gif' alt='Loading...'>");
+      $pageList.append($scrollLoading);
+
+      opts = {domain: this.toSearch,
+              lang: this.lang,
+              page_limit: window.apiPageLimit,
+              page_offset: this.scrollOffset};
+
+      this.scrollOffset += window.apiPageLimit;
+      $.getJSON(window.apiUrl, opts, function (data) {
+        var json_data = {"pages": data.pages, "lang": self.lang};
+        $pageList.append(self.pageListTemplate(json_data));
+
+        $pageList.find(".scroll-loading").remove();
+
+        // if is data.pages is empty prevent other loads
+        if (data.pages.length !== 0)
+          self.isLoading = false;
+      });
+    }
+  },
+
+  loadMore: function (e) {
+    // Note: this method is only for mobile devices
+    var self = this
+      , $pageList = $(this.el).find(".page-list")
+      , $target = $(e.target)
+      , opts = {domain: this.toSearch,
+            lang: this.lang,
+            page_limit: window.apiPageLimit,
+            page_offset: this.scrollOffset};
+
+    $target.html("<img src='static/img/loading.gif' alt='Loading...'>");
+
+    this.scrollOffset += window.apiPageLimit;
+    $.getJSON(window.apiUrl, opts, function (data) {
+      var json_data = {"pages": data.pages, "lang": self.lang};
+      $pageList.append(self.pageListTemplate(json_data));
+      $target.remove();
+    });
+  }
 });
 
 

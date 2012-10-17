@@ -1,6 +1,6 @@
 $(function () {
   $("#go-to-top").live("click", function (e) {
-    $(window).scrollTop($("#top-anchor").offset().top);
+    $(window).scrollTop($($(this).data('to-top')).offset().top);
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -27,7 +27,7 @@ $(function () {
       window.router.navigate("!search/" + lang + "/" + encodeURI(window.toSearch) + "/" + pageId, {trigger: false});
 
       window.diffView.render(
-        {page: page, diff: "", error: false, edit: "", lang: lang}
+        {page: page, pageId: pageId, diff: "", error: false, edit: "", lang: lang}
       );
 
 
@@ -102,6 +102,7 @@ $(function () {
 
         diffData.diff = revData.diff["*"];
         diffData.page = page;
+        diffData.pageId = pageId;
         diffData.lang = lang;
         diffData.edit = {
           revid: revId,
@@ -144,6 +145,9 @@ var opts = {
   left: 'auto' // Left position relative to parent in px
 };
 window.spinner = new Spinner(opts);
+
+window.apiUrl = "http://toolserver.org/~sonet/cgi-bin/watchdog.py?callback=?";
+window.apiPageLimit = 50;
 
 window.showLoading = function () {
   $("#loading").fadeIn();

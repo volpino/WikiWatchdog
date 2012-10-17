@@ -1,4 +1,7 @@
 var AppRouter = Backbone.Router.extend({
+    initialize: function () {
+      this.bind("all", this._trackPageview);
+    },
     routes: {
       "!search/:lang/:toSearch/:page/:revid": "search",
       "!search/:lang/:toSearch/:page": "search",
@@ -6,17 +9,20 @@ var AppRouter = Backbone.Router.extend({
       "!help": "help",
       "*action": "home",
     },
+    _trackPageview: function () {
+      var url = Backbone.history.getFragment();
+      _gaq.push(['_trackPageview', "/#" + url]);
+    },
     home: function () {
       window.homeView.render();
     },
     search: function (lang, toSearch, page, revid) {
-      var apiUrl = "http://toolserver.org/~sonet/cgi-bin/watchdog.py?callback=?"
-        , opts;
+      var opts;
 
       lang = escape(lang);
       toSearch = escape(toSearch);
 
-      opts = {domain: toSearch, lang: lang};
+      opts = {domain: toSearch, lang: lang, page_limit: window.apiPageLimit};
 
       // if the given domain is an ip don't look for its range,
       // make an exact match query
@@ -25,7 +31,7 @@ var AppRouter = Backbone.Router.extend({
 
       window.showLoading();
       $.ajax({
-        url: apiUrl,
+        url: window.apiUrl,
         dataType: "json",
         data: opts,
         cache: true,
