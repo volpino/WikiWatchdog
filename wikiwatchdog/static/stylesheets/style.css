@@ -74,6 +74,13 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     font-weight: bold !important;
 }
 
+.img-author {
+    border-radius: 100px 100px 100px 100px;
+    height: 100px;
+    width: 100px;
+    padding: 5px;
+}
+
 .whole-page {
     position: fixed;
     width: 100%;

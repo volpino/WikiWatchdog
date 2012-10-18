@@ -40,7 +40,7 @@
             &copy;
          </span>
           <!--[if lte IE 8]></span><![endif]-->
-          <a href="http://volpino.github.com">Federico "fox" Scrinzi</a> of <a href="http://sonet.fbk.eu">SoNet@FBK</a>. We love but are not affiliated with Wikipedia. WikiWatchdog is <a href="https://github.com/volpino/WikiWatchdog">free software!</a>.
+          <a href="http://volpino.github.com">Federico "fox" Scrinzi</a> and <a href="http://gnuband.org">Paolo Massa</a> of <a href="http://sonet.fbk.eu">SoNet@FBK</a>. We love but are not affiliated with Wikipedia. WikiWatchdog is <a href="https://github.com/volpino/WikiWatchdog">free software!</a>.
         </p>
         <p>Powered by <a href="http://toolserver.org">Wikimedia Toolserver</a></p>
       </footer>
@@ -101,11 +101,17 @@
 
         <div class="span4">
           <h4 class="libertine">Authors</h4>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta. Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero. Vivamus ullamcorper sapien molestie magna convallis sit amet facilisis magna vulputate. Cras et pulvinar sem. Integer posuere interdum eros ut pharetra. Pellentesque eu ante pulvinar leo volutpat dictum.
+            <img class="img-author pull-right" src="static/img/fox.jpg">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta. Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero.
+            <img class="img-author pull-left" src="static/img/phauly.jpg">
+            Vivamus ullamcorper sapien molestie magna convallis sit amet facilisis magna vulputate. Cras et pulvinar sem. Integer posuere interdum eros ut pharetra. Pellentesque eu ante pulvinar leo volutpat dictum.
         </div>
 
         <div class="span4">
           <h4 class="libertine">Free and Open source API</h4>
+          WikiWatchdog retireves data from WikiMedia ToolServer and the Wikipedia API
+          through a simple API that can be used freely by everyone!
+          We encourage futher development of the WikiWatchdog API (so ask )
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta. Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero. Vivamus ullamcorper sapien molestie magna convallis sit amet facilisis magna vulputate. Cras et pulvinar sem. Integer posuere interdum eros ut pharetra. Pellentesque eu ante pulvinar leo volutpat dictum.
         </div>
       </div>
@@ -134,8 +140,8 @@
         <%= wiki_lang[lang] %> Wikipedia
       </h4>
 
-      <p>
-        <%= pages.length %> articles (<%= total_edits %> edits)
+      <p class="small">
+        <%= stats.pages %> articles
         - Query executed in <%= Math.round(stats.execution_time * 100) / 100 %> sec.
       </p>
 
@@ -230,7 +236,9 @@
       <hr>
 
       <% if (error) { %>
-        <p>There was an error</p>
+        <div class="alert alert-error">
+          <p><strong>Error</strong> while retrieveng diff information</p>
+        </div>
       <% } else if (diff === "") { %>
         <p id="article-intro"></p>
         <p id="article-link" class="hide">

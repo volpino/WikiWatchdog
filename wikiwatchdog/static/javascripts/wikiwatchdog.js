@@ -127,6 +127,21 @@ $(function () {
   });
 });
 
+window.findPage = function (pageId, revId) {
+  var $page = $("#page-" + pageId);
+  if ($page.length !== 0) {
+    $page.click();
+    if (revId)
+      $("#revid-" + revId).click();
+  }
+  else {
+    $(".load-more").click();
+    $(".page-list").on("scroll-loaded", function () {
+      window.findPage(pageId, revId);
+    });
+  }
+};
+
 var opts = {
   lines: 9, // The number of lines to draw
   length: 30, // The length of each line
@@ -147,7 +162,7 @@ var opts = {
 window.spinner = new Spinner(opts);
 
 window.apiUrl = "http://toolserver.org/~sonet/cgi-bin/watchdog.py?callback=?";
-window.apiPageLimit = 50;
+window.apiPageLimit = 200;
 
 window.showLoading = function () {
   $("#loading").fadeIn();

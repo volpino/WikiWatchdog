@@ -58,11 +58,8 @@ var AppRouter = Backbone.Router.extend({
           }
           window.hideLoading();
 
-          if (page) {
-            $("#page-" + page).click();
-          }
-          if (revid)
-            $("#revid-" + revid).click();
+          if (page)
+            window.findPage(page, revid);
         },
         timeout: 20000,
         error: function (xhr, status) {

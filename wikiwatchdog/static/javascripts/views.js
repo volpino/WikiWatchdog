@@ -36,6 +36,8 @@ var SearchView = Backbone.View.extend({
 
     this.lang = lang;
     this.toSearch = toSearch;
+    this.isLoading = false;
+    this.scrollOffset = window.apiPageLimit;
 
     json_data.toSearch = toSearch;
     json_data.lang = lang;
@@ -118,8 +120,12 @@ var SearchView = Backbone.View.extend({
 
     this.scrollOffset += window.apiPageLimit;
     $.getJSON(window.apiUrl, opts, function (data) {
-      var json_data = {"pages": data.pages, "lang": self.lang};
-      $pageList.append(self.pageListTemplate(json_data));
+      var json_data;
+      if (data.pages.length !== 0) {
+        json_data = {"pages": data.pages, "lang": self.lang};
+        $pageList.append(self.pageListTemplate(json_data));
+        $pageList.trigger("scroll-loaded");
+      }
       $target.remove();
     });
   }
@@ -133,13 +139,17 @@ var DiffView = Backbone.View.extend({
   render: function (data) {
     $("#diff-area").html(this.template(data));
     $("[rel=tooltip]").tooltip();
-    twttr.widgets.load();
-    FB.XFBML.parse();
+    $("#diff-area").removeClass("hidden-phone");
+    if (window.twttr)
+      window.twttr.widgets.load();
+    if (window.FB)
+      window.FB.XFBML.parse();
     return this;
   },
 
   clear: function () {
     $("#diff-area").html(this.templateClear());
+    $("#diff-area").addClass("hidden-phone");
     return this;
   }
 });

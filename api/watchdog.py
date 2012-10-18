@@ -107,6 +107,8 @@ def process_ip(ip, no_range=False):
             {"title": key[0], "id": key[1], "edits": pages[key]}
         )
 
+    result["stats"]["pages"] = len(result["pages"])
+
 
 CACHE_DIR = "/home/sonet/wikiwatchdog_tmp/cache/"
 if not os.path.isdir(CACHE_DIR):
