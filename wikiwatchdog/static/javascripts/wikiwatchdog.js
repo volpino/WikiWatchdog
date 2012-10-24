@@ -6,6 +6,13 @@ $(function () {
     return false;
   });
 
+  $(".api-modal-open").live("click", function (e) {
+    $("#api-modal").modal();
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  });
+
   $(".page-title").live("click", function (e) {
     var $this = $(this)
       , editList = $(this).siblings(".edit-list")
@@ -95,7 +102,7 @@ $(function () {
       for (pageId in data.query.pages) {
         var diffData = {}
           , revData = data.query.pages[pageId].revisions[0];
-        if (!revData.diff.from)
+        if (!revData.diff.from || !revData.diff["*"])
           diffData.error = true;
         else
           diffData.error = false;

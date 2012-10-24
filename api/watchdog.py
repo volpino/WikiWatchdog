@@ -107,8 +107,6 @@ def process_ip(ip, no_range=False):
             {"title": key[0], "id": key[1], "edits": pages[key]}
         )
 
-    result["stats"]["pages"] = len(result["pages"])
-
 
 CACHE_DIR = "/home/sonet/wikiwatchdog_tmp/cache/"
 if not os.path.isdir(CACHE_DIR):
@@ -208,16 +206,14 @@ if ip:
         except OSError:
             pass
 
+    result["stats"]["pages"] = len(result["pages"])
     result["stats"]["execution_time"] = time() - START_TIME
 
     if result["stats"]["execution_time"] > 10:
         with open(path, "w") as f:
             f.write(json.dumps(result["pages"]))
-
-    #if org:
-    #    process_ip(ip)
-    #else:
-    #    result["error"] = "%s is not an organization domain" % domain
+else:
+    result["error"] = "No given domain or ip"
 
 if page_offset:
     result["pages"] = result["pages"][page_offset:]

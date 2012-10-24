@@ -6,8 +6,7 @@ var AppRouter = Backbone.Router.extend({
       "!search/:lang/:toSearch/:page/:revid": "search",
       "!search/:lang/:toSearch/:page": "search",
       "!search/:lang/:toSearch": "search",
-      "!help": "help",
-      "*action": "home",
+      "*action": "home"
     },
     _trackPageview: function () {
       var url = Backbone.history.getFragment();
@@ -74,9 +73,6 @@ var AppRouter = Backbone.Router.extend({
           }
         }
       });
-    },
-    help: function () {
-      alert(1);
     }
 });
 

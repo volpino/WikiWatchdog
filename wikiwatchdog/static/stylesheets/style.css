@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Libertine";
-    src: url('LinLibertine_RZah.ttf');
+    src: url('../font/LinLibertine_RZah.ttf');
 }
 
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
@@ -33,6 +33,14 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     height: 100% !important;
 }
 
+.padding-top10 {
+    padding-top: 10px;
+}
+
+.margin-top30 {
+    margin-top: 30px;
+}
+
 .margin-top40 {
     margin-top: 40px;
 }
@@ -41,8 +49,24 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     margin-top: 60px;
 }
 
+.margin-top80 {
+    margin-top: 80px;
+}
+
 .font13 {
     font-size: 13px;
+}
+
+.font17 {
+    font-size: 17px;
+}
+
+.font20 {
+    font-size: 20px;
+}
+
+.font42 {
+    font-size: 42px;
 }
 
 .center {
@@ -51,11 +75,11 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 
 .well.well-white {
     background-color: #fbfbfb !important;
-    border-color: #cccccc !important;
+    border-color: #bbbbbb !important;
 }
 
 .no-style {
-    color: black !important;
+    color: #333 !important;
 }
 
 .no-style:hover {
@@ -67,7 +91,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 }
 
 .black {
-    color: black !important;
+    color: #333 !important;
 }
 
 .bold {
@@ -75,10 +99,21 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 }
 
 .img-author {
-    border-radius: 100px 100px 100px 100px;
+    border-radius: 1000px 1000px 1000px 1000px;
     height: 100px;
     width: 100px;
     padding: 5px;
+}
+
+.home-icon {
+    font-size: 100px;
+    height: 100px;
+    width: 100px;
+}
+
+.home-icon i {
+    line-height: 100px !important;
+    background-image: none !important;
 }
 
 .whole-page {
@@ -137,7 +172,7 @@ ul.inline-list li{
 }
 
 .page-title {
-    color: black !important;
+    color: #333 !important;
     font-size: 16px;
 }
 
@@ -149,19 +184,19 @@ ul.inline-list li{
 }
 
 .edit-item {
-    color: black !important;
+    color: #333 !important;
     font-weight: bold;
 }
 
 .edit-item:hover {
-    color: black !important;
+    color: #333 !important;
 }
 
 footer {
     font-size: 12px;
 }
 
-footer a {
+a {
     color: black !important;
 }
 
@@ -170,5 +205,16 @@ footer a {
 }
 
 .wikilinks a {
-    color: black !important;
+    color: #333 !important;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    display: inline;
+    width: auto;
+    height: auto;
+    line-height: inherit;
+    vertical-align: baseline;
+    background-image: none;
+    background-position: 0% 0%;
+    background-repeat: repeat;
 }
