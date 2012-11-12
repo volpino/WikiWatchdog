@@ -373,10 +373,10 @@
         <div class="row-fluid">
           <div class="span8">
             <a rel="tooltip" title="See edit on Wikipedia" target="_blank"
-               href="http://<%= lang %>.wikipedia.org/w/index.php?title=<%= page %>&oldid=<%= edit.revid %>">
+               href="http://<%= lang %>.wikipedia.org/w/index.php?title=<%= page %>&oldid=<%= edit.revid %>&diff=prev">
               <%= prettyTimestamp(edit.timestamp) %>
               -
-              <%= edit.ip %> (<%= edit.domain %>)
+              <%= edit.ip %> <% if (edit.domain) { %>(<%= edit.domain %>)<% } %>
             </a>
           </div>
           <div class="span4">
