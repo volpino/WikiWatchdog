@@ -402,7 +402,7 @@
           <col class="diff-content">
         </colgroup><tbody>
         <tbody id="diff-area">
-          <%= diff %>
+          <% if (diff) { %><%= diff %><% } %>
         </tbody>
       </table>
     </script>
