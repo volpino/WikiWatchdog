@@ -305,7 +305,7 @@
           <ul class="edit-list well well-white hide">
             <% for (var j=0; j<edits.length; j++) { %>
               <% var edit = edits[j]; %>
-              <li>
+              <li class="edit-item-li">
                 <a class="edit-item"
                    id="revid-<%= edit.id %>"
                    data-revid="<%= edit.id %>"
@@ -314,10 +314,10 @@
                    data-domain="<%= edit.domain %>"
                    data-comment="<%= edit.comment %>"ent="<%= edit.comment %>"
                    href="#">
-                    <%= window.prettyTimestamp(edit.timestamp) %>
+                   edit on <%= window.prettyTimestamp(edit.timestamp) %>
                 </a>
                 <p class="small">
-                  <%= edit.ip %>
+                  by <%= edit.ip %>
                   <% if (edit.domain) { %>
                     (<%= edit.domain %>)
                   <% } %>

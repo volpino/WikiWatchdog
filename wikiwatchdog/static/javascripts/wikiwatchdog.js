@@ -13,6 +13,10 @@ $(function () {
     return false;
   });
 
+  $(".edit-item-li").live("click", function () {
+    $(this).find(".edit-item").click();
+  });
+
   $(".page-title").live("click", function (e) {
     var $this = $(this)
       , editList = $(this).siblings(".edit-list")
@@ -188,7 +192,7 @@ window.prettyTimestamp = function (ts) {
     , hour = ts.slice(8, 10)
     , minutes = ts.slice(10, 12)
     , seconds = ts.slice(12, 14);
-  return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+  return year + "-" + month + "-" + day + " at " + hour + ":" + minutes + ":" + seconds;
 };
 
 window.prettyTitle = function (title) {

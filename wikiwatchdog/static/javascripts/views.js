@@ -91,6 +91,8 @@ var SearchView = Backbone.View.extend({
               lang: this.lang,
               page_limit: window.apiPageLimit,
               page_offset: this.scrollOffset};
+      if (window.isIP(this.toSearch))
+        opts["norange"] = 1;
 
       this.scrollOffset += window.apiPageLimit;
       $.getJSON(window.apiUrl, opts, function (data) {
@@ -115,6 +117,8 @@ var SearchView = Backbone.View.extend({
             lang: this.lang,
             page_limit: window.apiPageLimit,
             page_offset: this.scrollOffset};
+      if (window.isIP(this.toSearch))
+        opts["norange"] = 1;
 
     $target.html("<img src='static/img/loading.gif' alt='Loading...'>");
 

@@ -192,7 +192,8 @@ if ip:
             pass
     if not result["pages"]:
         s_path = os.path.join(
-            SPOOLER_DIR, "lang=%s&domain=%s" % (lang, domain)
+            SPOOLER_DIR, "lang=%s&domain=%s%s" %
+                         (lang, domain, "&norange=1" if no_range else "")
         )
         try:
             open(s_path, "w")
