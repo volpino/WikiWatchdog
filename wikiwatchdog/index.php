@@ -365,9 +365,6 @@
         </div>
       <% } else if (diff === "") { %>
         <p id="article-intro"></p>
-        <p id="article-link" class="hide">
-          <a class="bold" href="http://<%= lang %>.wikipedia.org/wiki/<%= page %>" target="_blank">Continue on Wikipedia...</a>
-        </p>
       <% } else { %>
 
         <div class="row-fluid">

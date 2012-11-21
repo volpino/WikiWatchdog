@@ -76,7 +76,6 @@ $(function () {
           intro = pages[p].extract;
         }
         $("#article-intro").text(intro);
-        $("#article-link").show();
       });
     }
 
