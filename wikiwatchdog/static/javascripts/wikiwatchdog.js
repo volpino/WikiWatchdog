@@ -47,7 +47,7 @@ $(function () {
       editList.slideDown("normal", function () {
         var $pageList = $(".page-list");
         if ($pageList.css("max-height") !== "none") {  // is not mobile
-          if (!window.isVisibleOverflow($this, $pageList)) {
+          if (!window.isVisibleOverflow($this, $pageList, 75)) {
             $pageList.scrollTop($pageList.scrollTop() + $this.position().top - 192);
           }
         }
@@ -198,11 +198,12 @@ window.prettyTitle = function (title) {
   return title.replace(/_/g, " ");
 };
 
-window.isVisibleOverflow = function ($element, $scrollable) {
-  var docViewTop = $scrollable.position().top
+window.isVisibleOverflow = function ($element, $scrollable, off) {
+  var off = off || 0
+    , docViewTop = $scrollable.position().top
     , docViewBottom = docViewTop + $scrollable.height()
     , elemTop = $element.position().top
-    , elemBottom = elemTop + $element.height();
+    , elemBottom = elemTop + $element.height() + off;
   return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
 
