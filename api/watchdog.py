@@ -21,6 +21,8 @@ import GeoIP
 import oursql
 import json
 
+from settings_local import CACHE_DIR, SPOOLER_DIR, GEOIP_PATH
+
 
 def ip2long(ip):
     try:
@@ -107,15 +109,10 @@ def process_ip(ip, no_range=False):
             {"title": key[0], "id": key[1], "edits": pages[key]}
         )
 
-
-CACHE_DIR = "/home/sonet/wikiwatchdog_tmp/cache/"
 if not os.path.isdir(CACHE_DIR):
     os.makedirs(CACHE_DIR)
-SPOOLER_DIR = "/home/sonet/wikiwatchdog_tmp/spooler/"
 if not os.path.isdir(SPOOLER_DIR):
     os.makedirs(SPOOLER_DIR)
-
-GEOIP_PATH = "/home/sonet/GeoIPOrg.dat"
 
 NAMESPACES = {
     1: "Talk",
@@ -173,7 +170,7 @@ if domain is not None:
             result["error"] = "Invalid domain %s" % domain
 
 if ip:
-    org = gi.org_by_addr(ip)
+    #org = gi.org_by_addr(ip)
 
     if no_range:
         start, end = ip, ip
