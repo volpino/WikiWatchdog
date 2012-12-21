@@ -212,7 +212,6 @@ window.isVisibleOverflow = function ($element, $scrollable, off) {
     , docViewBottom = docViewTop + $scrollable.height()
     , elemTop = $element.position().top
     , elemBottom = elemTop + $element.height() + off;
-  console.log(elemBottom, docViewBottom, elemTop, docViewTop)
   return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
 
