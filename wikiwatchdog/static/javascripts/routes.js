@@ -14,6 +14,7 @@ var AppRouter = Backbone.Router.extend({
     },
     home: function () {
       window.homeView.render();
+      window.setTitle();
     },
     search: function (lang, toSearch, page, revid) {
       var opts;
@@ -22,6 +23,8 @@ var AppRouter = Backbone.Router.extend({
       toSearch = escape(toSearch);
 
       opts = {domain: toSearch, lang: lang, page_limit: window.apiPageLimit};
+
+      window.setTitle(lang, toSearch);
 
       // if the given domain is an ip don't look for its range,
       // make an exact match query
@@ -54,6 +57,18 @@ var AppRouter = Backbone.Router.extend({
           else {
             window.toSearch = toSearch;
             window.searchView.render(lang, toSearch, data);
+            window.getDomainLogo(toSearch, function (url, title, summary) {
+              if (url) {
+                $("#domain-logo").append($("<img>").addClass("orglogo").attr("src", url));
+              }
+              if (title) {
+                $("#domain-title").text(title);
+              }
+              if (summary) {
+                $("#domain-summary").text(summary);
+              }
+              $("#domain-box").removeClass("hidden");
+            });
           }
           window.hideLoading();
 
@@ -62,13 +77,17 @@ var AppRouter = Backbone.Router.extend({
         },
         timeout: 20000,
         error: function (xhr, status) {
+          var url = window.location.href;
           if (status === "timeout") {
             window.router.navigate("/", {trigger: true});
-              $("#alert-warning")
-                .show()
-                .find(".alert-msg").text("Looks like the query is taking too long. We received your submission, please retry in a few minutes");
-              $("#search-text").val(toSearch);
-              $("#search-lang").val(lang);
+            $("#alert-warning")
+              .show()
+              .find(".alert-msg").html(
+                "It looks like your query is taking too long. We are now swarming through millions of Wikipedia" +
+                " edits and the results will be available in a few minutes. "+
+                "Please save <a href='" + url + "'>this link</a> and  and visit it in a few minutes.")
+            $("#search-text").val(toSearch);
+            $("#search-lang").val(lang);
             window.hideLoading();
           }
         }

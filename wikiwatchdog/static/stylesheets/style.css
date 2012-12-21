@@ -171,7 +171,12 @@ ul.inline-list li{
     }
 }
 
+.page-list {
+    position: relative;
+}
+
 .page-title {
+    position: relative;
     color: #333 !important;
     font-size: 16px;
 }
@@ -227,4 +232,9 @@ a {
     background-image: none;
     background-position: 0% 0%;
     background-repeat: repeat;
+}
+
+.orglogo {
+    max-height: 80px;
+    margin: 0;
 }

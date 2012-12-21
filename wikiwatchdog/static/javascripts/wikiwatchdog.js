@@ -23,32 +23,39 @@ $(function () {
       , page = $(this).data("page")
       , pageId = $(this).data("page-id")
       , lang = $(this).data("lang")
-      , opts;
+      , opts
+      , $tmp;
 
     if (editList.is(":visible")) {
       window.diffView.clear();
       editList.slideUp();
 
-      $this.find(".icon-chevron-down").show();
       $this.find(".icon-chevron-up").hide();
+      $this.find(".icon-chevron-down").show();
 
       window.router.navigate("!search/" + lang + "/" + window.toSearch, {trigger: false});
+      window.setTitle(lang, window.toSearch);
     }
     else {
       window.router.navigate("!search/" + lang + "/" + encodeURI(window.toSearch) + "/" + pageId, {trigger: false});
+      window.setTitle(lang, window.toSearch, pageId);
 
       window.diffView.render(
         {page: page, pageId: pageId, diff: "", error: false, edit: "", lang: lang}
       );
 
-
-      $(".edit-list:visible").hide(0);
+      // close already open lists
+      $tmp = $(".edit-list:visible");
+      $tmp.hide(0);
+      $tmp = $tmp.siblings(".page-title")
+      $tmp.find(".icon-chevron-up").hide();
+      $tmp.find(".icon-chevron-down").show();
 
       editList.slideDown("normal", function () {
         var $pageList = $(".page-list");
         if ($pageList.css("max-height") !== "none") {  // is not mobile
           if (!window.isVisibleOverflow($this, $pageList, 75)) {
-            $pageList.scrollTop($pageList.scrollTop() + $this.position().top - 192);
+            $pageList.scrollTop($pageList.scrollTop() + $this.position().top);
           }
         }
         else {
@@ -58,8 +65,8 @@ $(function () {
         }
       });
 
-      $(this).find(".icon-chevron-down").hide();
-      $(this).find(".icon-chevron-up").show();
+      $this.find(".icon-chevron-down").hide();
+      $this.find(".icon-chevron-up").show();
 
       opts = {
         action: "query",
@@ -131,6 +138,7 @@ $(function () {
     })
 
     window.router.navigate("!search/" + lang + "/" + window.toSearch + "/" + pageId + "/" + revId, {trigger: false});
+    window.setTitle(lang, window.toSearch, pageId, revId);
 
     e.preventDefault();
     e.stopPropagation();
@@ -200,10 +208,11 @@ window.prettyTitle = function (title) {
 
 window.isVisibleOverflow = function ($element, $scrollable, off) {
   var off = off || 0
-    , docViewTop = $scrollable.position().top
+    , docViewTop = 0 //$scrollable.position().top
     , docViewBottom = docViewTop + $scrollable.height()
     , elemTop = $element.position().top
     , elemBottom = elemTop + $element.height() + off;
+  console.log(elemBottom, docViewBottom, elemTop, docViewTop)
   return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
 
@@ -218,3 +227,33 @@ window.isVisible = function ($element) {
 window.isIP = function (string) {
   return string.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/);
 };
+
+window.setTitle = function (lang, domain, pageId, revId) {
+  var msg;
+
+  if (!lang && !domain && !pageId && !revId) {
+    msg = "WikiWatchdog";
+  }
+  else {
+    msg = "WikiWatchdog - Edits";
+
+    if (pageId) {
+      msg += ' to "' +
+             window.prettyTitle($("#page-" + pageId + ".page-title").data("page")) +
+             '"';
+    }
+    if (domain) {
+      msg += " by " + domain;
+    }
+    if (lang) {
+      msg += " on the " + wiki_lang[lang] + " Wikipedia";
+    }
+  }
+
+  document.title = msg;
+
+  if (window.stMini) {
+    $("#sthoverbuttons").remove();
+    stMini.initWidget();
+  }
+}

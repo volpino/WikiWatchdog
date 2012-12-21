@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Wiki Watchdog</title>
+    <title>WikiWatchdog</title>
     <link href="static/stylesheets/bootstrap.min.css" rel="stylesheet">
     <link href="static/stylesheets/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="static/stylesheets/font-awesome.css" rel="stylesheet">
@@ -12,6 +12,10 @@
     <meta name="author" content="Federico 'fox' Scrinzi">
     <meta name="description" content="WikiWatchdog - Uncover organizations editing Wikipedia anonymously">
     <meta name="keywords" content="wiki,wikipedia,watchdog,wikiwatchdog,uncover,unveil,discover,edit,anonymous,research,organization,scanner,fbk,sonet,fox,volpino,federico,scrinzi,paolo,massa,phauly,gnuband">
+
+    <script>var switchTo5x=true;</script>
+    <script src="http://w.sharethis.com/button/buttons.js"></script>
+    <script src="http://s.sharethis.com/loader.js"></script>
   </head>
 
   <body>
@@ -41,7 +45,7 @@
           <!--[if lte IE 8]><span style="filter: FlipH; -ms-filter: "FlipH"; display: inline-block;"><![endif]-->
           <span style="-moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); display: inline-block;">
             &copy;
-         </span>
+          </span>
           <!--[if lte IE 8]></span><![endif]-->
           <a href="http://volpino.github.com">Federico "fox" Scrinzi</a> and <a href="http://gnuband.org">Paolo Massa</a> of <a href="http://sonet.fbk.eu">SoNet@FBK</a>. We <i class="icon-heart-empty"></i> but are not affiliated with Wikipedia. WikiWatchdog is <a href="https://github.com/volpino/WikiWatchdog">free software!</a>.
         </p>
@@ -65,7 +69,7 @@
           <div class="well well-white">
             <h1 class="font42 libertine center">
               <a class="no-style" href="#">
-                Wiki Watchdog
+                WikiWatchdog
                 <small class="font20">
                   <br>
                   Uncover organizations editing Wikipedia anonymously
@@ -86,6 +90,14 @@
               </select>
               <input id="search-button" type="submit" class="btn margin-left10" value="Search">
             </form>
+
+            <div class="center">
+              <i>Suggested:</i>
+              <a href="#!search/en/in.parliament.uk">parliament.uk</a> ~
+              <a href="#!search/en/cia.gov">cia.gov</a> ~
+              <a href="#!search/en/vatican.va">vatican.va</a> ~
+              <a href="#!search/en/stanford.edu">stanford.edu</a>
+            </div>
 
             <div id="alert" class="alert alert-error hide">
               <strong>Error!</strong> <span class="alert-msg"></span>
@@ -109,18 +121,24 @@
             He's really active in the open source world and he's interested in web applications, social media, transparency, geeky stuff and the Rubik's cube.
             <a href="http://gnuband.org"><img class="img-author pull-left" src="static/img/phauly.jpg"></a>
             <br><br>
-            <a href="http://gnuband.org">Paolo Massa</a> is a researcher at  <a href="http://fbk.eu">FBK</a> where he leads the <a href="http://sonet.fbk.eu">SoNet group</a>.
-            He received his PhD from ICT International Graduate School of University of Trento in March 2006 defending a thesis titled "Trust-aware Decentralized Recommender Systems".
-            His research interests include trust and reputation, recommender systems and social software.
+            <a href="http://gnuband.org">Paolo Massa</a> is a researcher at <a href="http://fbk.eu">FBK</a>.
+            His research interests are trust and reputation, social networking and online communities, gift economies and of course Wikipedia.
         </div>
 
         <div class="span4">
-          <h4 class="libertine">What's Wiki Watchdog?</h4>
+          <h4 class="libertine">What's WikiWatchdog?</h4>
           <span class="home-icon pull-left">
             <i class="icon-globe"></i>
           </span>
 
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam viverra dui id ipsum auctor et vulputate risus porta. Etiam a nulla sed neque porttitor aliquam. Ut eu leo at erat convallis accumsan. Suspendisse arcu ipsum, egestas vitae vehicula quis, rhoncus id libero. Vivamus ullamcorper sapien molestie magna convallis sit amet facilisis magna vulputate. Cras et pulvinar sem. Integer posuere interdum eros ut pharetra. Pellentesque eu ante pulvinar leo volutpat dictum
+          WikiWatchdog uncovers anonymous edits made by organizations on Wikipedia.
+          It aims at revealing hidden aspects of Wikipedia articles and improving transparency.
+          <br/>
+          On WikiWatchdog you:
+          <ol>
+            <li>enter the web address of an organization (e.g. cia.gov, vatican.va or stanford.edu)</li>
+            <li>see Wikipedia pages edited anonymously from computers belonging to this organization.</li>
+          </ol>
         </div>
 
         <div class="span4">
@@ -242,8 +260,7 @@
     </script>
 
     <script type="text/template" id="search-template">
-      <h2 class="libertine"><a class="no-style" href="#">Wiki Watchdog</a></h2>
-
+      <h2 class="libertine"><a class="no-style" href="#">WikiWatchdog</a></h2>
       <form id="search-form" class="form-inline">
         <input id="search-text" type="text" class="nomargin" value="<%= toSearch %>">
         on the
@@ -256,13 +273,24 @@
         </select>
         <input id="search-button" type="submit" class="btn nomargin margin-left10" value="Search">
       </form>
+      <div class="clearfix"></div>
 
       <hr>
 
-      <h4>
-        Articles edited anonymously by <%= toSearch %> on the
+      <h3 class="libertine center">
+        Articles edited anonymously by
+        <%= toSearch %>
+        on the
         <%= wiki_lang[lang] %> Wikipedia
-      </h4>
+      </h3>
+
+      <div id="domain-box" class="well hidden-phone hidden">
+        <span class="pull-right" id="domain-logo"></span>
+        <p>
+          <strong id="domain-title"></strong><strong>:</strong>
+          <span id="domain-summary"></span>
+        </p>
+      </div>
 
       <p class="small">
         <%= stats.pages %> articles
@@ -367,30 +395,21 @@
         <p id="article-intro"></p>
       <% } else { %>
 
-        <div class="row-fluid">
-          <div class="span8">
-            <a rel="tooltip" title="See edit on Wikipedia" target="_blank"
-               href="http://<%= lang %>.wikipedia.org/w/index.php?title=<%= page %>&oldid=<%= edit.revid %>&diff=prev">
-              <%= prettyTimestamp(edit.timestamp) %>
-              -
-              <%= edit.ip %> <% if (edit.domain) { %>(<%= edit.domain %>)<% } %>
-            </a>
-          </div>
-          <div class="span4">
-            <ul class="inline-list hidden-phone">
-              <li>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-text="<%= prettyTitle(page) %> - <%= toSearch %> on @Wikiwatchdog" data-count="none">Tweet</a>
-              </li>
-              <li>
-                <div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
-              </li>
-            </ul>
-          </div>
+        <div>
+          <a rel="tooltip" title="See edit on Wikipedia" target="_blank"
+             href="http://<%= lang %>.wikipedia.org/w/index.php?title=<%= page %>&oldid=<%= edit.revid %>&diff=prev">
+            edit on
+            <%= prettyTimestamp(edit.timestamp) %>
+            by
+            <%= edit.ip %> <% if (edit.domain) { %>(<%= edit.domain %>)<% } %>
+          </a>
         </div>
         <% if (edit.comment) { %>
           <p>Edit comment: <em><%= edit.comment %></em></p>
         <% } %>
       <% } %>
+
+      <hr>
 
       <table class="diff diff-contentalign-left">
         <colgroup><col class="diff-marker">
@@ -399,7 +418,13 @@
           <col class="diff-content">
         </colgroup><tbody>
         <tbody id="diff-area">
-          <% if (diff) { %><%= diff %><% } %>
+          <% if (diff) { %>
+            <tr>
+              <td class="diff-lineno" colspan="2">Page before the edit</td>
+              <td class="diff-lineno" colspan="2">Page after the edit</td>
+            </tr>
+            <%= diff %>
+          <% } %>
         </tbody>
       </table>
     </script>
@@ -412,17 +437,13 @@
 
     <script src="static/javascripts/spin.min.js"></script>
 
-    <!-- Facebook sdk -->
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=237970542997906";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+    <script>stLight.options({publisher:"ur-b13ddc3b-b206-293b-f875-d0fe3f89287e"});</script>
+    <script>var options={"publisher": "ur-b13ddc3b-b206-293b-f875-d0fe3f89287e","position": "right", "ad": { "visible": false, "openDelay": 5,"closeDelay": 0}, "chicklets": { "items": ["facebook", "twitter"]}};var st_hover_widget = new sharethis.widgets.hoverbuttons(options);</script>
 
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <script>
+      // Ugly hack to tweak sharethis
+      $(document).bind("DOMSubtreeModified", function() { $(".st_twitter_large").attr("st_via", "WikiWatchdog") });
+    </script>
 
     <script>
       var _gaq = _gaq || [];
@@ -437,6 +458,8 @@
     </script>
 
     <script src="static/javascripts/wiki_langs.js"></script>
+    <script src="static/javascripts/wikipedia.js"></script>
+    <script src="static/javascripts/wiki_logo.js"></script>
 
     <script src="static/javascripts/wikiwatchdog.js"></script>
 
