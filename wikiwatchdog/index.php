@@ -26,13 +26,18 @@
         preg_match('/search\/([^\/]+)\/([^\/]+)(\/.*)?/', $param, $matches);
         $content = file_get_contents('http://toolserver.org/~sonet/cgi-bin/watchdog.py?lang='.$matches[1].'&domain='.$matches[2]);
         $json = json_decode($content);
-        echo "<ul>";
+        echo "<ul style='height:0;overflow:auto'>";
         foreach ($json->pages as $page) {
           echo "<li>".$page->title."</li>";
         }
         echo "</ul>";
       }
     ?>
+    <script>
+      if (window.location.href.indexOf("_escaped_fragment_=") !== -1) {
+        window.location.href = window.location.href.replace("_escaped_fragment_=", "#!");
+      }
+    </script>
 
     <div class="container-fluid">
       <div id="content">
@@ -290,6 +295,7 @@
           <strong id="domain-title"></strong><strong>:</strong>
           <span id="domain-summary"></span>
         </p>
+        <div class="clearfix"></div>
       </div>
 
       <p class="small">

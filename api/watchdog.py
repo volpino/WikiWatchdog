@@ -53,6 +53,9 @@ def process_ip(ip, no_range=False):
             break
 
     where_ip = "%s%%" % start[:i]
+    if where_ip.rfind(".") == -1:
+        result["error"] = "%s has too many IPs." % domain
+        return None
 
     db = oursql.connect(db='%swiki_p' % lang,
                         host="%swiki-p.rrdb.toolserver.org" % lang,
