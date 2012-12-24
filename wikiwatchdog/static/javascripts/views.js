@@ -154,6 +154,7 @@ var DiffView = Backbone.View.extend({
   clear: function () {
     $("#diff-area").html(this.templateClear());
     $("#diff-area").addClass("hidden-phone");
+    $(".edit-selected").removeClass("edit-selected");
     return this;
   }
 });

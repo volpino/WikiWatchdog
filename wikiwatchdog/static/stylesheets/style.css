@@ -207,6 +207,10 @@ ul.inline-list li{
     color: #333 !important;
 }
 
+.edit-selected {
+    background: #DDDDDD;
+}
+
 footer {
     font-size: 12px;
 }

@@ -19,16 +19,16 @@ $(function () {
 
   $(".page-title").live("click", function (e) {
     var $this = $(this)
-      , editList = $(this).siblings(".edit-list")
-      , page = $(this).data("page")
-      , pageId = $(this).data("page-id")
-      , lang = $(this).data("lang")
+      , $editList = $this.siblings(".edit-list")
+      , page = $this.data("page")
+      , pageId = $this.data("page-id")
+      , lang = $this.data("lang")
       , opts
       , $tmp;
 
-    if (editList.is(":visible")) {
+    if ($editList.is(":visible")) {
       window.diffView.clear();
-      editList.slideUp();
+      $editList.slideUp();
 
       $this.find(".icon-chevron-up").hide();
       $this.find(".icon-chevron-down").show();
@@ -51,7 +51,7 @@ $(function () {
       $tmp.find(".icon-chevron-up").hide();
       $tmp.find(".icon-chevron-down").show();
 
-      editList.slideDown("normal", function () {
+      $editList.slideDown("normal", function () {
         var $pageList = $(".page-list");
         if ($pageList.css("max-height") !== "none") {  // is not mobile
           if (!window.isVisibleOverflow($this, $pageList, 75)) {
@@ -91,15 +91,17 @@ $(function () {
   });
 
   $(".edit-item").live("click", function (e) {
-    var revId = $(this).data("revid")
-      , $pageTitle = $(this).closest(".edit-list").siblings(".page-title")
+    var $this = $(this)
+      , revId = $this.data("revid")
+      , $editList = $this.closest(".edit-list")
+      , $pageTitle = $editList.siblings(".page-title")
       , page = $pageTitle.data("page")
       , pageId = $pageTitle.data("page-id")
       , lang = $pageTitle.data("lang")
-      , ip = $(this).data("ip")
-      , domain = $(this).data("domain")
-      , timestamp = $(this).data("timestamp")
-      , comment = $(this).data("comment")
+      , ip = $this.data("ip")
+      , domain = $this.data("domain")
+      , timestamp = $this.data("timestamp")
+      , comment = $this.data("comment")
       , opts = {
         action: "query",
         prop: "revisions",
@@ -107,6 +109,9 @@ $(function () {
         rvdiffto: "prev",
         format: "json"
       };
+
+    $editList.find(".edit-selected").removeClass("edit-selected");
+    $this.closest(".edit-item-li").addClass("edit-selected");
 
     $.getJSON("http://" + lang + ".wikipedia.org/w/api.php?callback=?", opts, function (data) {
       for (pageId in data.query.pages) {
